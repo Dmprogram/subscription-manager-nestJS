@@ -1,0 +1,40 @@
+@keyframes spinner {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.container {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+}
+
+.spinner {
+  transform-origin: 0 0;
+  transform: translateZ(0) scale(1);
+
+  padding-top: 54px;
+  padding-left: 54px;
+
+  backface-visibility: hidden;
+}
+
+.spinner div {
+  box-sizing: content-box;
+  width: 46px;
+  height: 46px;
+
+  border: 4px solid #d8ed1e;
+  border-top-color: transparent;
+  border-radius: 50%;
+
+  animation: spinner 0.7874s linear infinite;
+}

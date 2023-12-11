@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.pickerContainer {
+  width: 100%;
+  margin: 5px 0;
+
+  background-color: #fff;
+  border: 2px solid rgb(226 224 224);
+  border-radius: 10px;
+
+  transition: 0.5s border-color;
+}
+
+.pickerContainer:hover {
+  border: 2px solid #706c6c;
+}
+
+.pickerContainer:focus-within {
+  background-color: rgb(229 230 232);
+  border: 2px solid rgb(14 108 156);
+}
+
+.pickerContainer fieldset {
+  border: none;
+}
+
+.picker {
+  width: 100%;
+}
+
+.error {
+  font-size: 1rem;
+  color: rgb(223 33 33);
+}
+
+.clue {
+  font-size: 0.8rem;
+  color: rgb(207 207 32);
+}

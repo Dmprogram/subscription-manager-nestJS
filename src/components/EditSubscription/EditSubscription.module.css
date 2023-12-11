@@ -1,0 +1,289 @@
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  max-width: 628px;
+  margin: 40px auto;
+
+  background-color: #2b2c2e;
+  border-radius: 20px;
+}
+
+.header {
+  margin: 0;
+  margin-top: 40px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 80%;
+  margin-top: 30px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.input {
+  width: 100%;
+  height: 40px;
+  margin: 5px 0;
+  padding: 10px;
+
+  border: 2px solid rgb(226 224 224);
+  border-radius: 10px;
+
+  transition: 0.5s border-color;
+}
+
+.input:hover {
+  border: 2px solid #706c6c;
+}
+
+.input::placeholder {
+  color: #c8c8c8;
+}
+
+.input:focus {
+  background-color: rgb(229 230 232);
+  border: 2px solid rgb(14 108 156);
+  outline: none;
+}
+
+.upload {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.activeUpload {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60%;
+  height: 40px;
+
+  background-color: #419152;
+  border-radius: 10px;
+}
+
+.activeUpload:hover {
+  background-color: #1c6f16;
+}
+
+.inActiveUpload {
+  cursor: not-allowed;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60%;
+  height: 40px;
+
+  background-color: #4d4747;
+  border-radius: 10px;
+}
+
+.inputImage {
+  z-index: -1;
+
+  display: block;
+
+  width: 0;
+  height: 0;
+
+  opacity: 0;
+}
+
+.text {
+  width: 100%;
+  text-align: center;
+}
+
+.buttonUpload {
+  width: 30%;
+  height: 40px;
+
+  color: #f9f5f5;
+
+  background-color: #1e6fe1;
+  border: none;
+  border-radius: 10px;
+}
+
+.buttonUpload:disabled {
+  cursor: not-allowed;
+  background-color: #4d4747;
+}
+
+.imageContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.buttonSubmit {
+  width: 100%;
+  padding: 15px 0;
+
+  color: #f9f5f5;
+
+  background-color: #1159be;
+  border: none;
+  border-radius: 10px;
+}
+
+.buttonSubmit:hover {
+  cursor: pointer;
+  background-color: #093169;
+}
+
+.buttonSubmit:disabled {
+  cursor: not-allowed;
+  background-color: #4d4747;
+}
+
+.error {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  color: rgb(223 33 33);
+}
+
+.deleteSubscription {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  margin: 20px 0 40px;
+  margin-bottom: 40px;
+  padding: 15px 0;
+
+  color: #fff;
+
+  background-color: #b03333;
+  border: none;
+  border-radius: 10px;
+}
+
+.deleteSubscription:hover {
+  cursor: pointer;
+  background-color: rgb(137 27 27);
+}
+
+.deleteSubscription:disabled {
+  cursor: not-allowed;
+  background-color: #4d4747;
+}
+
+.cancel {
+  width: 15px;
+  margin-right: 5px;
+}
+
+.loaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  display: inline-block;
+
+  box-sizing: border-box;
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+
+  border: 3px solid #d5c818;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+
+  animation: rotation 1s linear infinite;
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  height: 500px;
+
+  font-size: 2rem;
+  text-align: center;
+}
+
+.link {
+  padding-top: 30px;
+}
+
+.notFoundButton {
+  padding: 10px 30px;
+
+  font-size: 1.8rem;
+  color: rgb(225 225 26);
+
+  background-color: rgb(61 59 59);
+  border: none;
+  border-radius: 10px;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 568px) {
+  .container {
+    margin: 40px auto;
+  }
+
+  .header {
+    margin: 0;
+    margin-top: 30px;
+  }
+
+  .form {
+    margin-top: 25px;
+  }
+
+  .image {
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+  }
+
+  .upload {
+    font-size: 0.9rem;
+  }
+}

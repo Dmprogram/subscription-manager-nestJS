@@ -1,0 +1,71 @@
+.payments {
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+  margin: 60px auto;
+}
+
+.header {
+  align-self: center;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+}
+
+.headerLoading {
+  align-self: center;
+  margin-bottom: 80px;
+  font-size: 1.4rem;
+}
+
+.paymentsTitle {
+  display: flex;
+  justify-content: flex-end;
+  margin: 20px 0 10px;
+  color: #e6e3e3;
+}
+
+.results {
+  font-size: 1.4rem;
+}
+
+.link {
+  padding-bottom: 2px;
+
+  font-size: 1.4rem;
+  color: #979292;
+  text-decoration: none;
+
+  border-bottom: 1px solid #979292;
+}
+
+.link:hover {
+  color: #c0cb3f;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.subscriptionNotFound {
+  margin-top: 20px;
+  font-size: 1.5rem;
+  color: #d4e511;
+}
+
+@media (device-width >= 320px) and (device-width <= 568px) {
+  .header,
+  .headerLoading,
+  .results {
+    font-size: 1rem;
+  }
+
+  .payments {
+    margin: 40px auto;
+  }
+
+  .paymentsTitle {
+    margin: 25px 0 5px;
+  }
+
+  .subscriptionNotFound {
+    margin-top: 10px;
+    font-size: 1.1rem;
+  }
+}

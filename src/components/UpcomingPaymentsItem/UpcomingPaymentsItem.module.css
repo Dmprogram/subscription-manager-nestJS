@@ -1,0 +1,99 @@
+.payment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 15px;
+  padding: 15px 30px;
+
+  background-color: #2b2c2e;
+  border-radius: 10px;
+}
+
+.paymentTitle {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.applicationIcon {
+  background: url('../../assets/calendar.png');
+}
+
+.applicationIcon,
+.dateIcon,
+.moneyIcon,
+.imageIcon,
+.imageContainer {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.paymentDate {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.paymentValue {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.loader {
+  display: inline-block;
+
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+
+  border: 3px solid #d5c818;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 568px) {
+  .payment {
+    margin-top: 10px;
+    padding: 10px 15px;
+  }
+
+  .paymentTitle,
+  .paymentDate {
+    font-size: 0.8rem;
+  }
+
+  .paymentDate {
+    margin-top: 7px;
+  }
+
+  .paymentValue {
+    font-size: 1.1rem;
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 359px) {
+  .payment {
+    padding: 10px;
+  }
+
+  .paymentValue {
+    font-size: 0.9rem;
+  }
+}

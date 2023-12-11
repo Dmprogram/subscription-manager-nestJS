@@ -1,0 +1,10 @@
+.link {
+  margin-left: 10px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  color: #f5f5f6;
+}
+
+.link:hover {
+  color: rgb(26 9 213);
+}

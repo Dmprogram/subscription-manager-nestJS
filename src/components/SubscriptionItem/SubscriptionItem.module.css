@@ -1,0 +1,182 @@
+.activePayment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 15px;
+  padding: 15px 30px;
+
+  opacity: 1;
+  background-color: #2e2c2b;
+  border-radius: 10px;
+}
+
+.inActivePayment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 15px;
+  padding: 15px 30px;
+
+  opacity: 0.5;
+  background-color: #2e2c2b;
+  border-radius: 10px;
+}
+
+.paymentTitle {
+  display: flex;
+  align-items: center;
+}
+
+.applicationIcon,
+.dateIcon,
+.moneyIcon,
+.imageIcon,
+.editIcon,
+.imageContainer {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.paymentDate,
+.paymentValue {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.paymentManage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 74px;
+}
+
+.editContainer {
+  display: flex;
+  align-items: center;
+}
+
+.link {
+  padding-bottom: 2px;
+
+  font-size: 1.2rem;
+  color: #979292;
+  text-decoration: none;
+
+  border-bottom: 1px solid #979292;
+}
+
+.link:hover {
+  color: #dcdcdc;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.loader {
+  display: inline-block;
+
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+
+  border: 3px solid #d5c818;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 568px) {
+  .loader {
+    display: inline-block;
+
+    box-sizing: border-box;
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+
+    border: 3px solid #d5c818;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+
+    animation: rotation 1s linear infinite;
+  }
+
+  .activePayment,
+  .inActivePayment {
+    margin-top: 10px;
+    padding: 10px 15px;
+  }
+
+  .paymentManage {
+    justify-content: space-around;
+  }
+
+  .paymentTitle,
+  .paymentDate,
+  .paymentValue {
+    font-size: 0.9rem;
+  }
+
+  .paymentDate,
+  .paymentValue {
+    margin-top: 7px;
+  }
+
+  .link {
+    font-size: 1rem;
+  }
+
+  .applicationIcon,
+  .dateIcon,
+  .moneyIcon,
+  .imageIcon,
+  .editIcon,
+  .imageContainer {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 360px) {
+  .activePayment,
+  .inActivePayment {
+    padding: 5px 10px;
+  }
+
+  .link {
+    font-size: 1rem;
+  }
+
+  .paymentTitle,
+  .paymentDate,
+  .paymentValue {
+    font-size: 0.85rem;
+  }
+
+  .applicationIcon,
+  .dateIcon,
+  .moneyIcon,
+  .imageIcon,
+  .editIcon,
+  .imageContainer {
+    width: 15px;
+    height: 15px;
+  }
+}

@@ -1,0 +1,150 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.formContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 628px;
+  padding: 40px;
+
+  background-color: #2b2c2e;
+  border-radius: 20px;
+}
+
+.header {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.description {
+  margin-top: 3px;
+  margin-bottom: 30px;
+  color: #9b9a9a;
+}
+
+.form {
+  position: relative;
+  width: 100%;
+}
+
+.field {
+  margin: 10px 0 25px;
+}
+
+.label {
+  margin-left: 5px;
+}
+
+.input {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+
+  border: 2px solid rgb(226 224 224);
+  border-radius: 10px;
+
+  transition: 0.5s border-color;
+}
+
+.input:hover {
+  border: 2px solid #706c6c;
+}
+
+.input:focus {
+  background-color: rgb(229 230 232);
+  border: 2px solid rgb(14 108 156);
+  outline: none;
+}
+
+.inputSubmit {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px 0;
+
+  color: #f9f5f5;
+
+  background-color: #1159be;
+  border: none;
+  border-radius: 10px;
+}
+
+.inputSubmit:hover {
+  cursor: pointer;
+  background-color: #093169;
+}
+
+.registration {
+  margin-top: 10px;
+}
+
+.link {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #117bf3;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.error {
+  position: absolute;
+  left: 5px;
+  font-size: 0.9rem;
+  color: rgb(223 33 33);
+}
+
+@media (device-width >= 320px) and (device-width <= 568px) {
+  .formContainer {
+    margin: 0 10px;
+    padding: 20px 15px;
+  }
+
+  .header {
+    font-size: 1.6rem;
+  }
+
+  .description {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+
+  .registration {
+    font-size: 1rem;
+  }
+
+  .error {
+    font-size: 0.8rem;
+  }
+
+  .inputSubmit {
+    margin-top: 10px;
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 360px) {
+  .header {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+
+  .error {
+    font-size: 0.8rem;
+  }
+
+  .registration {
+    font-size: 0.9rem;
+  }
+}

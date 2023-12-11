@@ -1,0 +1,27 @@
+.payments {
+  max-width: 1000px;
+  margin: 40px auto;
+}
+
+.paymentsTitle {
+  margin-bottom: 25px;
+  font-size: 1.5rem;
+}
+
+@media (device-width >= 320px) and (device-width <= 568px) {
+  .payments {
+    margin: 30px auto;
+  }
+
+  .paymentsTitle {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (device-width >= 320px) and (device-width <= 359px) {
+  .paymentsTitle {
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
+}
