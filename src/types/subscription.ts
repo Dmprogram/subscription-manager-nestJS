@@ -1,4 +1,4 @@
-export type Tsubscription = {
+export type TSubscription = {
   id: number
   name: string
   currency: string
