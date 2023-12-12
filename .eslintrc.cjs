@@ -12,8 +12,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react-refresh'],
-
+  plugins: ['react-refresh', '@typescript-eslint'],
   settings: {
     'import/resolver': {
       node: {
@@ -21,18 +20,27 @@ module.exports = {
       },
     },
   },
+  root: true,
 
   rules: {
-    'no-param-reassign': [
-      'error',
-      {
-        props: true,
-        ignorePropertyModificationsFor: ['state'],
-      },
-    ],
+    'no-nested-ternary': 'off',
+    'react/no-array-index-key': 'off',
+    'react/require-default-props': 'off',
+    'consistent-return': ['warn', { treatUndefinedAsUnspecified: true }],
+    'no-shadow': 'off',
+    'react/no-unused-prop-types': 'warn',
+    'react/no-unstable-nested-components': 'warn',
+    'react/prop-types': 'off',
+    '@typescript-eslint/no-empty-function': 'warn',
+    'jsx-a11y/control-has-associated-label': 'warn',
+    'no-plusplus': 'warn',
+    '@typescript-eslint/no-shadow': ['off'],
+    'no-underscore-dangle': 0,
+    'no-param-reassign': 0,
     'import/prefer-default-export': 'off',
     'react/jsx-props-no-spreading': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-explicit-any': 'warn',
 
     'import/extensions': [
       'error',
@@ -51,8 +59,7 @@ module.exports = {
         devDependencies: true,
       },
     ],
-    'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': 'warn',
+
     'react/jsx-filename-extension': [
       2,
       {
