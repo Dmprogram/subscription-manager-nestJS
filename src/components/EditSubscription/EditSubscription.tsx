@@ -12,7 +12,7 @@ import { EditValues } from './types'
 
 import cancel from '../../assets/cancel.png'
 import { db, auth, storage } from '../../firebase'
-import { useAppSelector, useAppDispatch } from '../../hooks/ReduxHooks'
+import { useAppSelector, useAppDispatch } from '../../hooks/useReduxHooks'
 import { AlertDeleteSubscription } from '../AlertDeleteSubscription/AlertDeleteSubscription'
 import { DatePick } from '../DatePicker/DatePicker'
 import { NotificationDelete } from '../Notifications/NotificationDelete'

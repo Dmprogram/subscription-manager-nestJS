@@ -24,7 +24,7 @@ export const AuthService = {
   async getNewTokens() {
     const refreshToken = Cookies.get('refreshToken')
     const response = await axios.post<string, { data: TAuthResponse }>(
-      `${import.meta.env.API_URL}/auth/login/access-token`,
+      `${import.meta.env.VITE_API_URL}/auth/login/access-token`,
       { refreshToken },
       {
         headers: getContentType(),

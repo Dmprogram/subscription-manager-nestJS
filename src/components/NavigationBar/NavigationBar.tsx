@@ -1,11 +1,10 @@
-import { signOut } from 'firebase/auth'
 import { NavLink } from 'react-router-dom'
 
 import classes from './NavigationBar.module.css'
 
-import { auth } from '../../firebase'
-import { useAppDispatch } from '../../hooks/ReduxHooks'
+import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { resetState } from '../store/subscriptionsSlice'
+import { logout } from '../store/user/userActions'
 
 export const NavigationBar = () => {
   const dispatch = useAppDispatch()
@@ -31,10 +30,7 @@ export const NavigationBar = () => {
       <NavLink
         onClick={() => {
           dispatch(resetState())
-
-          signOut(auth).catch((error) => {
-            console.log(error)
-          })
+          dispatch(logout())
         }}
         to='/login'
         className={classes.link}

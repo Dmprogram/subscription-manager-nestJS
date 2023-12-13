@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import { useRef } from 'react'
 
-import { useAppDispatch, useAppSelector } from '../../hooks/ReduxHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import { addSortByParameter } from '../store/subscriptionsSlice'
 
 export const SelectSortType = () => {

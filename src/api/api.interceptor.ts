@@ -6,7 +6,7 @@ import { getAccessToken, removeFromStorage } from '../services/auth/auth.helper'
 import { AuthService } from '../services/auth/auth.service'
 
 export const instance = axios.create({
-  baseURL: import.meta.env.API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   headers: getContentType(),
 })
 

@@ -1,38 +1,19 @@
-import { onAuthStateChanged } from 'firebase/auth'
-import { useState, useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
 import classes from './ProtectedRoute.module.css'
 
-import { auth } from '../../firebase'
+import { useAuth } from '../../hooks/useAuth'
 import { NavigationBar } from '../NavigationBar/NavigationBar'
 
 import { Spinner } from '../Spinner/Spinner'
 
 export const ProtectedRoute = () => {
-  const [loading, setLoading] = useState(true)
-  const [authState, setAuthState] = useState(false)
+  const { isAuth, isLoading } = useAuth()
 
-  useEffect(() => {
-    const subscribe = onAuthStateChanged(auth, (user) => {
-      setLoading(true)
-      if (user) {
-        setAuthState(true)
-        setLoading(false)
-      } else {
-        setAuthState(false)
-        setLoading(false)
-      }
-    })
-    return () => {
-      subscribe()
-    }
-  }, [])
-
-  if (loading) {
+  if (isLoading) {
     return <Spinner />
   }
-  return authState ? (
+  return isAuth ? (
     <div className={classes.content}>
       <NavigationBar />
       <Outlet />

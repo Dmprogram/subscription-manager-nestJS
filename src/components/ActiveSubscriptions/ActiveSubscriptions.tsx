@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import classes from './ActiveSubscriptions.module.css'
 
-import { useAppSelector } from '../../hooks/ReduxHooks'
+import { useAppSelector } from '../../hooks/useReduxHooks'
 import { SelectSortType } from '../SelectSortType/SelectSortType'
 import { Subscription } from '../store/types'
 import { SubscriptionItem } from '../SubscriptionItem/SubscriptionItem'

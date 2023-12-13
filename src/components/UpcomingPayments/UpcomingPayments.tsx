@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 
 import classes from './UpcomingPayments.module.css'
 
-import { useAppSelector, useAppDispatch } from '../../hooks/ReduxHooks'
-import { fetchSubscriptionsList, updateUpcomingPayments } from '../store/subscriptionsSlice'
+import { useAppSelector, useAppDispatch } from '../../hooks/useReduxHooks'
+import { updateUpcomingPayments } from '../store/subscriptionsSlice'
 
 import { Subscription } from '../store/types'
 import { UpcomingPaymentsItem } from '../UpcomingPaymentsItem/UpcomingPaymentsItem'
@@ -16,7 +16,7 @@ export const UpcomingPayments = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
     if (fetchedSubscriptions.length === 0) {
-      dispatch(fetchSubscriptionsList())
+      // dispatch(fetchSubscriptionsList())
     }
   }, [fetchedSubscriptions.length, dispatch])
   useEffect(() => {

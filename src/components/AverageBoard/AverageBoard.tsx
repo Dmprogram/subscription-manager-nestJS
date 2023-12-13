@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import classes from './AverageBoard.module.css'
 
-import { useAppSelector } from '../../hooks/ReduxHooks'
+import { useAppSelector } from '../../hooks/useReduxHooks'
 
 export const AverageBoard = () => {
   const { averageExpensesRub, averageExpensesUsd, averageExpensesEur } = useAppSelector(

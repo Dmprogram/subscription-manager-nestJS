@@ -22,10 +22,10 @@ const App = () => (
           <Route path='/registration' element={<SignUppage />} />
           <Route element={<ProtectedRoute />}>
             <Route path='/' element={<MainPage />} />
-            <Route path='/active-subscriptions' element={<ActiveSubscriptionsPage />} />
+            {/* <Route path='/active-subscriptions' element={<ActiveSubscriptionsPage />} />
             <Route path='/inactive-subscriptions' element={<InactiveSubscriptionsPage />} />
             <Route path='/new-subscription' element={<NewSubscriptionPage />} />
-            <Route path='/edit-subscription/:subscriptionId' element={<EditSubscriptionPage />} />
+            <Route path='/edit-subscription/:subscriptionId' element={<EditSubscriptionPage />} /> */}
             <Route path='*' element={<NotFoundPage />} />
           </Route>
         </Routes>

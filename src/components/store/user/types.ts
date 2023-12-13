@@ -22,3 +22,8 @@ export type TEmailPassword = {
 export type TAuthResponse = TTokens & {
   user: TUser
 }
+export type TValidationErrors = {
+  error: string
+  message: string | string[]
+  statusCode: number
+}

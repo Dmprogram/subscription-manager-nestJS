@@ -4,7 +4,7 @@ import classes from './SearchSubscription.module.css'
 
 import cross from '../../assets/crossLight.png'
 import searchIcon from '../../assets/searchIcon.png'
-import { useAppDispatch, useAppSelector } from '../../hooks/ReduxHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 
 import { findSubscription, clearSearchAndSortFields, fetchSubscriptionsList } from '../store/subscriptionsSlice'
 

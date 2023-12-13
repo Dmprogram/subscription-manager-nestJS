@@ -1,28 +1,28 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { auth } from '../../firebase'
+import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { FormAuthorization } from '../FormAuthorization/FormAuthorization'
+import { register } from '../store/user/userActions'
 
 export const SignUp = () => {
   const [authError, setAuthError] = useState<string | null | boolean>(null)
-
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const handleRegister = (
-    values: { email: string; password: string },
-    setFieldValue: (field: string, value: string, shouldValidate: boolean) => void,
-  ) => {
+  const handleRegister = async (values: { email: string; password: string }) => {
     const { email, password } = values
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(() => navigate('/'))
-      .catch((error) => {
-        console.log(error.code)
-        if (error.code === 'auth/email-already-in-use') {
-          setAuthError('A user with this e-mail already exists')
-          setFieldValue('password', '', true)
-        }
-      })
+    const response = await dispatch(register({ email, password }))
+    if (register.fulfilled.match(response)) {
+      navigate('/')
+    } else if (response.payload) {
+      if (Array.isArray(response.payload.message)) {
+        setAuthError(response.payload.message[0])
+      } else {
+        setAuthError(response.payload.message)
+      }
+    } else {
+      console.log(response.error)
+    }
   }
   return (
     <FormAuthorization

@@ -1,33 +1,33 @@
-import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { auth } from '../../firebase'
+import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { FormAuthorization } from '../FormAuthorization/FormAuthorization'
+import { login } from '../store/user/userActions'
 
 export const SignIn = () => {
+  const dispatch = useAppDispatch()
   const [authError, setAuthError] = useState<string | null | boolean>(null)
-
   const navigate = useNavigate()
-  const handleLogin = (values: { email: string; password: string }) => {
+  const handleLogin = async (values: { email: string; password: string }) => {
     if (authError) {
       setAuthError('Please check e-mail or password')
       return
     }
     const { email, password } = values
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate('/')
-      })
-      .catch((error) => {
-        console.log(error.code)
-        if (error.code === 'auth/invalid-login-credentials') {
-          setAuthError('Incorrect email or password')
-        }
-        if (error.code === 'auth/too-many-requests') {
-          setAuthError('Please try later, too many attempts')
-        }
-      })
+    const response = await dispatch(login({ email, password }))
+
+    if (login.fulfilled.match(response)) {
+      navigate('/')
+    } else if (response.payload) {
+      if (Array.isArray(response.payload.message)) {
+        setAuthError(response.payload.message[0])
+      } else {
+        setAuthError(response.payload.message)
+      }
+    } else {
+      console.log(response.error)
+    }
   }
   return (
     <FormAuthorization

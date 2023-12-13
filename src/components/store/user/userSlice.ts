@@ -40,7 +40,11 @@ export const userSlice = createSlice({
         state.isLoading = false
         state.user = null
       })
+      .addCase(checkAuth.pending, (state) => {
+        state.isLoading = true
+      })
       .addCase(checkAuth.fulfilled, (state, { payload }) => {
+        state.isLoading = false
         state.user = payload.user
       })
   },
