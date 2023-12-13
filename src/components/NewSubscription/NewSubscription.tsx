@@ -15,7 +15,7 @@ import { useAppDispatch } from '../../hooks/ReduxHooks'
 import { DatePick } from '../DatePicker/DatePicker'
 
 import { NotificationAdd } from '../Notifications/NotificationAdd'
-import { addSubscription } from '../store/subscriptionsListSlice'
+import { addSubscription } from '../store/subscriptionsSlice'
 import {
   validationSubscriptionSchema,
   currenciesOptions,

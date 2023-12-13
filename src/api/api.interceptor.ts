@@ -29,7 +29,7 @@ instance.interceptors.response.use(
     ) {
       originalRequest._isRetry = true
       try {
-        await AuthService.getNewTokents()
+        await AuthService.getNewTokens()
         return instance.request(originalRequest)
       } catch (error) {
         if (errorCatch(error) === 'jwt expired') {

@@ -21,7 +21,7 @@ export const AuthService = {
     return response.data
   },
 
-  async getNewTokents() {
+  async getNewTokens() {
     const refreshToken = Cookies.get('refreshToken')
     const response = await axios.post<string, { data: TAuthResponse }>(
       `${import.meta.env.API_URL}/auth/login/access-token`,
@@ -33,5 +33,6 @@ export const AuthService = {
     if (response.data.accessToken) {
       saveToStorage(response.data)
     }
+    return response
   },
 }

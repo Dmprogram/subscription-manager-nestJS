@@ -6,7 +6,7 @@ import cross from '../../assets/crossLight.png'
 import searchIcon from '../../assets/searchIcon.png'
 import { useAppDispatch, useAppSelector } from '../../hooks/ReduxHooks'
 
-import { findSubscription, clearSearchAndSortFields, fetchSubscriptionsList } from '../store/subscriptionsListSlice'
+import { findSubscription, clearSearchAndSortFields, fetchSubscriptionsList } from '../store/subscriptionsSlice'
 
 export const SearchSubscription = () => {
   const dispatch = useAppDispatch()

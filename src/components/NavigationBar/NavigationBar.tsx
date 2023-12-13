@@ -5,7 +5,7 @@ import classes from './NavigationBar.module.css'
 
 import { auth } from '../../firebase'
 import { useAppDispatch } from '../../hooks/ReduxHooks'
-import { resetState } from '../store/subscriptionsListSlice'
+import { resetState } from '../store/subscriptionsSlice'
 
 export const NavigationBar = () => {
   const dispatch = useAppDispatch()
