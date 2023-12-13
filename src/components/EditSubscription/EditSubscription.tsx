@@ -18,9 +18,9 @@ import { DatePick } from '../DatePicker/DatePicker'
 import { NotificationDelete } from '../Notifications/NotificationDelete'
 import { NotificationEdit } from '../Notifications/NotificationEdit'
 import { Spinner } from '../Spinner/Spinner'
-import { deleteSubscription, fetchSubscriptionsList, editSubscription } from '../store/subscriptionsSlice'
+import { deleteSubscription, fetchSubscriptionsList, editSubscription } from '../store/subscriptions/subscriptionsSlice'
 
-import { Subscription } from '../store/types'
+import { Subscription } from '../store/subscriptions/types'
 import {
   validationSubscriptionSchema,
   currenciesOptions,

@@ -3,9 +3,10 @@ import { useEffect } from 'react'
 import classes from './UpcomingPayments.module.css'
 
 import { useAppSelector, useAppDispatch } from '../../hooks/useReduxHooks'
-import { updateUpcomingPayments } from '../store/subscriptionsSlice'
+import { TSubscription } from '../../types/subscription'
+import { fetchSubscriptions } from '../store/subscriptions/subscriptionsActions'
+import { updateUpcomingPayments } from '../store/subscriptions/subscriptionsSlice'
 
-import { Subscription } from '../store/types'
 import { UpcomingPaymentsItem } from '../UpcomingPaymentsItem/UpcomingPaymentsItem'
 import { UpcomingPaymentsSkeleton } from '../UpcomingPaymentsSkeleton/UpcomingPaymentsSkeleton'
 
@@ -16,7 +17,7 @@ export const UpcomingPayments = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
     if (fetchedSubscriptions.length === 0) {
-      // dispatch(fetchSubscriptionsList())
+      dispatch(fetchSubscriptions())
     }
   }, [fetchedSubscriptions.length, dispatch])
   useEffect(() => {
@@ -34,7 +35,7 @@ export const UpcomingPayments = () => {
       <h3 className={classes.paymentsTitle}>
         {upcomingPayments.length !== 0 ? 'UPCOMING PAYMENTS' : 'THERE IS NO UPCOMING PAYMENT'}
       </h3>
-      {upcomingPayments.map((subscription: Subscription) => (
+      {upcomingPayments.map((subscription: TSubscription) => (
         <UpcomingPaymentsItem key={subscription.id} {...subscription} />
       ))}
     </section>

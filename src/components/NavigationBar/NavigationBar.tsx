@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import classes from './NavigationBar.module.css'
 
 import { useAppDispatch } from '../../hooks/useReduxHooks'
-import { resetState } from '../store/subscriptionsSlice'
+import { resetState } from '../store/subscriptions/subscriptionsSlice'
 import { logout } from '../store/user/userActions'
 
 export const NavigationBar = () => {

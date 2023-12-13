@@ -9,13 +9,11 @@ import classes from './NewSubscription.module.css'
 
 import { NewSubscriptionValues } from './types'
 
-import { db, auth, storage } from '../../firebase'
-
 import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { DatePick } from '../DatePicker/DatePicker'
 
 import { NotificationAdd } from '../Notifications/NotificationAdd'
-import { addSubscription } from '../store/subscriptionsSlice'
+import { addSubscription } from '../store/subscriptions/subscriptionsSlice'
 import {
   validationSubscriptionSchema,
   currenciesOptions,

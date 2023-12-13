@@ -6,7 +6,8 @@ import cross from '../../assets/crossLight.png'
 import searchIcon from '../../assets/searchIcon.png'
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 
-import { findSubscription, clearSearchAndSortFields, fetchSubscriptionsList } from '../store/subscriptionsSlice'
+import { fetchSubscriptions } from '../store/subscriptions/subscriptionsActions'
+import { findSubscription, clearSearchAndSortFields } from '../store/subscriptions/subscriptionsSlice'
 
 export const SearchSubscription = () => {
   const dispatch = useAppDispatch()
@@ -14,7 +15,7 @@ export const SearchSubscription = () => {
 
   useEffect(() => {
     if (fetchedSubscriptions.length === 0) {
-      dispatch(fetchSubscriptionsList())
+      dispatch(fetchSubscriptions())
     }
   }, [dispatch, fetchedSubscriptions.length])
 

@@ -1,7 +1,7 @@
 import { instance } from '../../api/api.interceptor'
 import { TSubscription } from '../../types/subscription'
 
-const SUBSCRIPTIONS = 'subsciprions'
+const SUBSCRIPTIONS = 'subscriptions'
 export const SubscriptionService = {
   async getAll() {
     return instance<TSubscription[]>({

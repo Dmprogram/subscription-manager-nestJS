@@ -7,21 +7,20 @@ import applicationIcon from '../../assets/applicationIcon.png'
 import calendar from '../../assets/calendar.png'
 import edit from '../../assets/edit.png'
 import money from '../../assets/money.png'
-import { Subscription } from '../store/types'
+import { TSubscription } from '../../types/subscription'
 import { SwitchSubscriptionStatus } from '../SwitchSubscriptionStatus/SwitchSubscriptionStatus'
 import { formatDate } from '../utils/formatDate'
 import { formatExpenses } from '../utils/formatExpenses'
 
-export const SubscriptionItem = (props: Subscription) => {
+export const SubscriptionItem = (props: TSubscription) => {
   const [isLoadedImage, setIsLoadedImage] = useState(false)
 
   const onLoad = () => {
     setIsLoadedImage(true)
   }
 
-  const { date, name, price, currency, id, paymentFrequency, imageUrl, status } = props
+  const { name, price, currency, id, paymentFrequency, image, status, year, month, day } = props
 
-  const { year, month, day } = date
   const opacity = status ? classes.activePayment : classes.inActivePayment
   const { formatDay, formatMonth } = formatDate(year, month, day)
 
@@ -37,11 +36,11 @@ export const SubscriptionItem = (props: Subscription) => {
     <div className={opacity}>
       <div>
         <div className={classes.paymentTitle}>
-          {imageUrl ? (
+          {image ? (
             <div className={classes.imageContainer}>
               {isLoadedImage ? null : <div className={classes.loader} />}
               <img
-                src={imageUrl}
+                src={image}
                 alt='icon'
                 className={classes.imageIcon}
                 onLoad={onLoad}
@@ -73,9 +72,9 @@ export const SubscriptionItem = (props: Subscription) => {
             Edit & Details
           </Link>
         </div>
-        <div className={classes.switch}>
+        {/* <div className={classes.switch}>
           <SwitchSubscriptionStatus id={id} status={status} />
-        </div>
+        </div> */}
       </div>
     </div>
   )

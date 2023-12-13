@@ -4,7 +4,6 @@ export type TSubscription = {
   currency: string
   price: number
   status: boolean
-  createdAt: Date
   day: number
   month: number
   year: number

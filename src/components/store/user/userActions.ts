@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 
 import { AxiosError } from 'axios'
 
-import { TAuthResponse, TEmailPassword, TValidationErrors } from './types'
+import { TAuthResponse, TEmailPassword, TErrorData } from './types'
 
 import { errorCatch } from '../../../api/api.helper'
 import { removeFromStorage } from '../../../services/auth/auth.helper'
@@ -12,14 +12,14 @@ export const register = createAsyncThunk<
   TAuthResponse,
   TEmailPassword,
   {
-    rejectValue: TValidationErrors
+    rejectValue: TErrorData
   }
 >('auth/register', async (data, { rejectWithValue }) => {
   try {
     const response = await AuthService.main('register', data)
     return response
   } catch (error: any) {
-    const err: AxiosError<TValidationErrors> = error
+    const err: AxiosError<TErrorData> = error
     if (!err.response) {
       throw error
     }
@@ -31,14 +31,14 @@ export const login = createAsyncThunk<
   TAuthResponse,
   TEmailPassword,
   {
-    rejectValue: TValidationErrors
+    rejectValue: TErrorData
   }
 >('auth/login', async (data, { rejectWithValue }) => {
   try {
     const response = await AuthService.main('login', data)
     return response
   } catch (error: any) {
-    const err: AxiosError<TValidationErrors> = error
+    const err: AxiosError<TErrorData> = error
     if (!err.response) {
       throw error
     }
@@ -57,7 +57,7 @@ export const checkAuth = createAsyncThunk<TAuthResponse>(
       const response = await AuthService.getNewTokens()
       return response.data
     } catch (error) {
-      if (errorCatch(error) === 'jwt expired') {
+      if (errorCatch(error) === 'jwt expired' || errorCatch(error) === 'Invalid refresh token') {
         dispatch(logout())
       }
       return rejectWithValue(error)

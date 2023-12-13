@@ -5,29 +5,27 @@ import classes from './UpcomingPaymentsItem.module.css'
 import applicationIcon from '../../assets/applicationIcon.png'
 import calendar from '../../assets/calendar.png'
 import money from '../../assets/money.png'
-import { Subscription } from '../store/types'
+import { TSubscription } from '../../types/subscription'
 import { formatDate } from '../utils/formatDate'
 import { formatExpenses } from '../utils/formatExpenses'
 
-export const UpcomingPaymentsItem = (props: Subscription) => {
+export const UpcomingPaymentsItem = (props: TSubscription) => {
   const [isLoadedImage, setIsLoadedImage] = useState(false)
 
   const onLoad = () => {
     setIsLoadedImage(true)
   }
-
-  const { date, name, price, currency, imageUrl } = props
-  const { year, month, day } = date
+  const { name, price, currency, image, year, month, day } = props
   const { formatDay, formatMonth } = formatDate(year, month, day)
   return (
     <div className={classes.payment}>
       <div>
         <div className={classes.paymentTitle}>
-          {imageUrl ? (
+          {image ? (
             <div className={classes.imageContainer}>
               {isLoadedImage ? null : <div className={classes.loader} />}
               <img
-                src={imageUrl}
+                src={image}
                 alt='icon'
                 className={classes.imageIcon}
                 onLoad={onLoad}

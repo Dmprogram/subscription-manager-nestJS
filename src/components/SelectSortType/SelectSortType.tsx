@@ -7,7 +7,7 @@ import * as React from 'react'
 import { useRef } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
-import { addSortByParameter } from '../store/subscriptionsSlice'
+import { addSortByParameter } from '../store/subscriptions/subscriptionsSlice'
 
 export const SelectSortType = () => {
   const windowWidth = useRef(window.innerWidth)

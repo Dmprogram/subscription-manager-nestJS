@@ -8,7 +8,7 @@ import classes from './SwitchSubscriptionStatus.module.css'
 
 import { db, auth } from '../../firebase'
 import { useAppDispatch } from '../../hooks/useReduxHooks'
-import { changeStatus } from '../store/subscriptionsSlice'
+import { changeStatus } from '../store/subscriptions/subscriptionsSlice'
 
 type SwitchSubscriptionStatusProps = {
   id: string

@@ -4,8 +4,8 @@ import { useAutoAnimate } from '@formkit/auto-animate/react'
 import classes from './InactiveSubscriptions.module.css'
 
 import { useAppSelector } from '../../hooks/useReduxHooks'
+import { TSubscription } from '../../types/subscription'
 import { SelectSortType } from '../SelectSortType/SelectSortType'
-import { Subscription } from '../store/types'
 import { SubscriptionItem } from '../SubscriptionItem/SubscriptionItem'
 import { SubscriptionsSkeleton } from '../SubscriptionsSkeleton/SubscriptionsSkeleton'
 
@@ -35,7 +35,7 @@ export const InactiveSubscriptions = () => {
       </header>
       {searchSubsciptions.length > 0 ? (
         <div>
-          {searchSubsciptions.map((subscription: Subscription) => (
+          {searchSubsciptions.map((subscription: TSubscription) => (
             <SubscriptionItem key={subscription.id} {...subscription} />
           ))}
         </div>
@@ -58,7 +58,7 @@ export const InactiveSubscriptions = () => {
         ) : null}
       </div>
       <div ref={parent}>
-        {inactiveSubscriptions.map((subscription: Subscription) => (
+        {inactiveSubscriptions.map((subscription: TSubscription) => (
           <SubscriptionItem key={subscription.id} {...subscription} />
         ))}
       </div>

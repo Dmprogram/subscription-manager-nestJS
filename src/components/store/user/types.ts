@@ -22,7 +22,7 @@ export type TEmailPassword = {
 export type TAuthResponse = TTokens & {
   user: TUser
 }
-export type TValidationErrors = {
+export type TErrorData = {
   error: string
   message: string | string[]
   statusCode: number

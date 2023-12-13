@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom'
 import classes from './ActiveSubscriptions.module.css'
 
 import { useAppSelector } from '../../hooks/useReduxHooks'
+import { TSubscription } from '../../types/subscription'
 import { SelectSortType } from '../SelectSortType/SelectSortType'
-import { Subscription } from '../store/types'
 import { SubscriptionItem } from '../SubscriptionItem/SubscriptionItem'
 import { SubscriptionsSkeleton } from '../SubscriptionsSkeleton/SubscriptionsSkeleton'
 
@@ -40,7 +40,7 @@ export const ActiveSubscriptions = () => {
       </header>
       {searchSubsciptions.length > 0 ? (
         <div>
-          {searchSubsciptions.map((subscription: Subscription) => (
+          {searchSubsciptions.map((subscription: TSubscription) => (
             <SubscriptionItem key={subscription.id} {...subscription} />
           ))}
         </div>
@@ -64,7 +64,7 @@ export const ActiveSubscriptions = () => {
         ) : null}
       </div>
       <div ref={parent}>
-        {activeSubscriptions.map((subscription: Subscription) => (
+        {activeSubscriptions.map((subscription: TSubscription) => (
           <SubscriptionItem key={subscription.id} {...subscription} />
         ))}
       </div>
