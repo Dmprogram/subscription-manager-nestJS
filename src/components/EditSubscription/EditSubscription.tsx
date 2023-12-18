@@ -11,16 +11,15 @@ import classes from './EditSubscription.module.css'
 import { EditValues } from './types'
 
 import cancel from '../../assets/cancel.png'
-import { db, auth, storage } from '../../firebase'
 import { useAppSelector, useAppDispatch } from '../../hooks/useReduxHooks'
+import { TSubscription } from '../../types/subscription'
 import { AlertDeleteSubscription } from '../AlertDeleteSubscription/AlertDeleteSubscription'
 import { DatePick } from '../DatePicker/DatePicker'
 import { NotificationDelete } from '../Notifications/NotificationDelete'
 import { NotificationEdit } from '../Notifications/NotificationEdit'
 import { Spinner } from '../Spinner/Spinner'
-import { deleteSubscription, fetchSubscriptionsList, editSubscription } from '../store/subscriptions/subscriptionsSlice'
+import { deleteSubscription, editSubscription } from '../store/subscriptions/subscriptionsSlice'
 
-import { Subscription } from '../store/subscriptions/types'
 import {
   validationSubscriptionSchema,
   currenciesOptions,
@@ -133,7 +132,7 @@ export const EditSubscription = () => {
       handleDeleteSubscription()
     }
   })
-  const subscription = fetchedSubscriptions.find((el: Subscription) => el.id === subscriptionId)
+  const subscription = fetchedSubscriptions.find((el: TSubscription) => el.id === subscriptionId)
 
   const handleSubmit = async (values: EditValues) => {
     setLoadingEdit(true)

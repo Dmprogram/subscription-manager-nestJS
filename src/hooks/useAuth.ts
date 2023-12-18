@@ -8,10 +8,8 @@ import { getAccessToken, getRefreshToken } from '../services/auth/auth.helper'
 
 export const useAuth = () => {
   const { pathname } = useLocation()
-
   const user = useAppSelector((state) => state.user)
   const { checkAuth, logout } = useActions()
-
   useEffect(() => {
     const accessToken = getAccessToken()
     if (accessToken) checkAuth()

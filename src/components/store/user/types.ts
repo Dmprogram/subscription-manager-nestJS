@@ -11,7 +11,7 @@ export type TTokens = {
 
 export type TInitialState = {
   user: TUserState | null
-  isLoading: boolean
+  isLoading: 'idle' | 'pending' | 'succeeded' | 'failed'
 }
 
 export type TEmailPassword = {

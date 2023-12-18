@@ -1,24 +1,27 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 import classes from './ProtectedRoute.module.css'
 
 import { useAuth } from '../../hooks/useAuth'
-import { NavigationBar } from '../NavigationBar/NavigationBar'
+import { AppForAuthorized } from '../AppForAuthorized/AppForAuthorized'
 
 import { Spinner } from '../Spinner/Spinner'
 
 export const ProtectedRoute = () => {
   const { isAuth, isLoading } = useAuth()
-
-  if (isLoading) {
+  if (isLoading === 'pending') {
     return <Spinner />
   }
-  return isAuth ? (
-    <div className={classes.content}>
-      <NavigationBar />
-      <Outlet />
-    </div>
-  ) : (
-    <Navigate replace to='/login' />
-  )
+
+  if (isAuth && isLoading === 'succeeded') {
+    return (
+      <div className={classes.content}>
+        <AppForAuthorized />
+      </div>
+    )
+  }
+
+  if (!isAuth || isLoading === 'failed') {
+    return <Navigate replace to='/login' />
+  }
 }

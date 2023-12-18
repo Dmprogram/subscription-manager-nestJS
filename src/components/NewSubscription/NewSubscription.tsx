@@ -46,25 +46,27 @@ export const NewSubscription = () => {
   const handleSubmit = async (values: NewSubscriptionValues, resetForm: () => void) => {
     setLoading(true)
     setDisabledSubmit(true)
-    const user = auth.currentUser
-    if (user && values.date) {
+    // const user = auth.currentUser
+    // if (user && values.date) {
+    if (values.date) {
       const { name, price, currency, paymentFrequency, date } = values
-      const creationTime = new Date().getTime()
       const newSubscription = {
         name,
         price: parseFloat(price as string),
-        date,
+        year: date.year,
+        month: date.month,
+        day: date.day,
         currency,
         paymentFrequency,
-        creationTime,
         imageUrl,
         status: true,
         id: '',
       }
+      console.log(newSubscription)
       try {
-        const docRef = await addDoc(collection(db, 'users', user.uid, 'subscriptions'), newSubscription)
-        newSubscription.id = docRef.id
-        dispatch(addSubscription({ newSubscription }))
+        // const docRef = await addDoc(collection(db, 'users', user.uid, 'subscriptions'), newSubscription)
+        // newSubscription.id = docRef.id
+        // dispatch(addSubscription({ newSubscription }))
         setLoading(false)
         setImageUrl('')
         setSubscriptionAdded(true)
