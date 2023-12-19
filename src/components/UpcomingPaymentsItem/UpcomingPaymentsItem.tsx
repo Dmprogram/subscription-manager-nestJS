@@ -6,8 +6,8 @@ import applicationIcon from '../../assets/applicationIcon.png'
 import calendar from '../../assets/calendar.png'
 import money from '../../assets/money.png'
 import { TSubscription } from '../../types/subscription'
-import { formatDate } from '../utils/formatDate'
-import { formatExpenses } from '../utils/formatExpenses'
+import { formatDate } from '../../utils/formatDate'
+import { formatExpenses } from '../../utils/formatExpenses'
 
 export const UpcomingPaymentsItem = (props: TSubscription) => {
   const [isLoadedImage, setIsLoadedImage] = useState(false)

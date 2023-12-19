@@ -1,4 +1,4 @@
-import { TSubscription } from '../../types/subscription'
+import { TSubscription } from '../types/subscription'
 
 const countAverageExpensesByCurrency = (fetchedSubscriptions: Array<TSubscription>, currency: string) => {
   const averageExpenses = fetchedSubscriptions.reduce((sum, item) => {

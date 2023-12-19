@@ -1,6 +1,6 @@
 import { sortPaymentsToOldest } from './sortPaymentsToOldest'
 
-import { TSubscription } from '../../types/subscription'
+import { TSubscription } from '../types/subscription'
 
 const currency = {
   RUB: 1,

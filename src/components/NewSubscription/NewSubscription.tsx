@@ -1,27 +1,23 @@
-import { collection, addDoc } from 'firebase/firestore'
-
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 
 import React, { useState, useEffect, useRef } from 'react'
 
 import classes from './NewSubscription.module.css'
 
-import { NewSubscriptionValues } from './types'
-
 import { useAppDispatch } from '../../hooks/useReduxHooks'
-import { TCreateSubscription, TNewSubscriptionValues } from '../../types/subscription'
-import { DatePick } from '../DatePicker/DatePicker'
-
-import { NotificationAdd } from '../Notifications/NotificationAdd'
-import { createSubscription } from '../store/subscriptions/subscriptionsActions'
-import { addSubscription } from '../store/subscriptions/subscriptionsSlice'
+import { SubscriptionService } from '../../services/subscription/subscription.service'
+import { TNewSubscriptionValues } from '../../types/subscription'
+import { resizeImage } from '../../utils/resizeImage'
 import {
   validationSubscriptionSchema,
   currenciesOptions,
   paymentFrequencyOptions,
-} from '../utils/validationSubscriptionSchema'
-import { validTypes } from '../utils/validTypesImages'
+} from '../../utils/validationSubscriptionSchema'
+import { validTypes } from '../../utils/validTypesImages'
+import { DatePick } from '../DatePicker/DatePicker'
+
+import { NotificationAdd } from '../Notifications/NotificationAdd'
+import { createSubscription } from '../store/subscriptions/subscriptionsActions'
 
 export const NewSubscription = () => {
   const dispatch = useAppDispatch()
@@ -31,7 +27,7 @@ export const NewSubscription = () => {
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [progress, setProgress] = useState('Choose an image')
-  const [imageUrl, setImageUrl] = useState<null | string>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [preview, setPreview] = useState('')
   const [subscriptionAdded, setSubscriptionAdded] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -45,46 +41,13 @@ export const NewSubscription = () => {
     setPreview(objectUrl)
   }, [file])
 
-  const handleSubmit = async (values: TNewSubscriptionValues, resetForm: () => void) => {
-    if (values.date) {
-      setLoading(true)
-      setDisabledSubmit(true)
-      const { name, price, currency, paymentFrequency, date, image, status } = values
-      const newSubscription = {
-        name,
-        price: parseFloat(price),
-        year: date.year,
-        month: date.month,
-        day: date.day,
-        currency,
-        paymentFrequency,
-        image,
-        status,
-      }
-      console.log(newSubscription)
-      try {
-        dispatch(createSubscription(newSubscription))
-        setLoading(false)
-        setSubscriptionAdded(true)
-        setDisabledSubmit(false)
-        resetForm()
-
-        // dispatch(addSubscription({ newSubscription }))
-        // setImageUrl('')
-        // setProgress('Choose an image')
-      } catch (e) {
-        setError(true)
-        console.error('Error adding subscription: ', e)
-      }
-    }
-  }
-
-  const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImage = async (ev: React.ChangeEvent<HTMLInputElement>) => {
     if (ev.target.files !== null) {
-      setFile(ev.target.files[0])
+      const image: File = await resizeImage(ev.target.files[0])
+      setFile(image)
     }
   }
-  const uploadImage = () => {
+  const handleUploadImage = async () => {
     setDisabledSubmit(true)
     if (!file) {
       setDisabledSubmit(false)
@@ -99,36 +62,54 @@ export const NewSubscription = () => {
     }
     const formData = new FormData()
 
-    formData.append('file', file)
-    console.log(formData)
+    formData.append('image', file)
+    try {
+      setFile(null)
+      setImageUrl(null)
+      setProgress('Uploading...')
+      const image = await SubscriptionService.uploadImage(formData)
 
-    // const storageRef = ref(storage, `images/${file.name}`)
-    // const uploadTask = uploadBytesResumable(storageRef, file)
-
-    // uploadTask.on(
-    //   'state_changed',
-    //   (snapshot) => {
-    //     const uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-    //     if (uploadProgress === 100) {
-    //       setProgress('Upload is almost done')
-    //     } else {
-    //       setProgress('Uploading...')
-    //     }
-    //     setFile(null)
-    //   },
-    //   (err) => {
-    //     console.log(err)
-    //     setDisabledSubmit(false)
-    //   },
-    //   () => {
-    //     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-    //       setImageUrl(url)
-    //       setProgress('Uploaded image')
-    //       setDisabledSubmit(false)
-    //     })
-    //   },
-    // )
+      setImageUrl(image.data.secure_url)
+      setProgress('Uploaded image')
+      setDisabledSubmit(false)
+    } catch (err) {
+      console.log(err)
+      setDisabledSubmit(false)
+    }
   }
+
+  const handleSubmit = async (values: TNewSubscriptionValues, resetForm: () => void) => {
+    if (values.date) {
+      setLoading(true)
+      setDisabledSubmit(true)
+      const { name, price, currency, paymentFrequency, date, status } = values
+      const newSubscription = {
+        name,
+        price: parseFloat(price),
+        year: date.year,
+        month: date.month,
+        day: date.day,
+        currency,
+        paymentFrequency,
+        image: imageUrl,
+        status,
+      }
+      try {
+        dispatch(createSubscription(newSubscription))
+        setLoading(false)
+        setSubscriptionAdded(true)
+        setDisabledSubmit(false)
+        setFile(null)
+        setImageUrl(null)
+        resetForm()
+        setProgress('Choose an image')
+      } catch (e) {
+        setError(true)
+        console.error('Error adding subscription: ', e)
+      }
+    }
+  }
+
   const initialValues = {
     name: '',
     price: '',
@@ -136,12 +117,11 @@ export const NewSubscription = () => {
     paymentFrequency: '',
     date: null,
     status: true,
-    image: undefined,
+    image: null,
   }
 
   const renderError = (message: string) => <p className={classes.error}>{message}</p>
   const disabledInput = disabledSubmit ? classes.inActiveUpload : classes.activeUpload
-
   return (
     <Formik
       initialValues={initialValues}
@@ -190,7 +170,7 @@ export const NewSubscription = () => {
                   id='file'
                   accept='image/*'
                   className={classes.inputImage}
-                  onChange={handleChange}
+                  onChange={handleChangeImage}
                   name='file'
                   disabled={disabledSubmit}
                 />
@@ -206,10 +186,21 @@ export const NewSubscription = () => {
                         {progress} <img src={preview} className={classes.image} alt='preview' />
                       </div>
                     )) ||
-                      progress)}
+                      (progress === 'Uploading...' ? (
+                        <div className={classes.imageContainer}>
+                          <div className={classes.loader} />
+                        </div>
+                      ) : (
+                        progress
+                      )))}
                 </div>
               </label>
-              <button type='button' onClick={uploadImage} className={classes.buttonUpload} disabled={disabledSubmit}>
+              <button
+                type='button'
+                onClick={handleUploadImage}
+                className={classes.buttonUpload}
+                disabled={disabledSubmit}
+              >
                 {uploadText}
               </button>
             </div>

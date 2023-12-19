@@ -8,9 +8,9 @@ import calendar from '../../assets/calendar.png'
 import edit from '../../assets/edit.png'
 import money from '../../assets/money.png'
 import { TSubscription } from '../../types/subscription'
+import { formatDate } from '../../utils/formatDate'
+import { formatExpenses } from '../../utils/formatExpenses'
 import { SwitchSubscriptionStatus } from '../SwitchSubscriptionStatus/SwitchSubscriptionStatus'
-import { formatDate } from '../utils/formatDate'
-import { formatExpenses } from '../utils/formatExpenses'
 
 export const SubscriptionItem = (props: TSubscription) => {
   const [isLoadedImage, setIsLoadedImage] = useState(false)

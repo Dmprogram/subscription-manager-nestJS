@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef } from 'react'
 
 import classes from './FormAuthorization.module.css'
 
-import { validationRegister, validationSignIn } from '../utils/validationRegister'
+import { validationRegister, validationSignIn } from '../../utils/validationRegister'
 
 interface FormAuthorizationProps {
   submitTitle: string

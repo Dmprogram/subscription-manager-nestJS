@@ -1,4 +1,4 @@
-import { TSubscription } from '../../types/subscription'
+import { TSubscription } from '../types/subscription'
 
 export const sortPaymentsToOldest = (fetchedSubscriptions: Array<TSubscription>, amount: number) => {
   if (fetchedSubscriptions.length === 0) return fetchedSubscriptions

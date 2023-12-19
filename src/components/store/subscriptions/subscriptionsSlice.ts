@@ -4,9 +4,9 @@ import { createSubscription, fetchSubscriptions } from './subscriptionsActions'
 import { TSubscriptionsState } from './types'
 
 import { TSubscription } from '../../../types/subscription'
-import { countAverageExpenses } from '../../utils/countAverageExpenses'
-import { sortByParameter } from '../../utils/sortByParameter'
-import { sortPaymentsToOldest } from '../../utils/sortPaymentsToOldest'
+import { countAverageExpenses } from '../../../utils/countAverageExpenses'
+import { sortByParameter } from '../../../utils/sortByParameter'
+import { sortPaymentsToOldest } from '../../../utils/sortPaymentsToOldest'
 
 import type { PayloadAction } from '@reduxjs/toolkit'
 

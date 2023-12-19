@@ -13,19 +13,18 @@ import { EditValues } from './types'
 import cancel from '../../assets/cancel.png'
 import { useAppSelector, useAppDispatch } from '../../hooks/useReduxHooks'
 import { TSubscription } from '../../types/subscription'
+import {
+  validationSubscriptionSchema,
+  currenciesOptions,
+  paymentFrequencyOptions,
+} from '../../utils/validationSubscriptionSchema'
+import { validTypes } from '../../utils/validTypesImages'
 import { AlertDeleteSubscription } from '../AlertDeleteSubscription/AlertDeleteSubscription'
 import { DatePick } from '../DatePicker/DatePicker'
 import { NotificationDelete } from '../Notifications/NotificationDelete'
 import { NotificationEdit } from '../Notifications/NotificationEdit'
 import { Spinner } from '../Spinner/Spinner'
 import { deleteSubscription, editSubscription } from '../store/subscriptions/subscriptionsSlice'
-
-import {
-  validationSubscriptionSchema,
-  currenciesOptions,
-  paymentFrequencyOptions,
-} from '../utils/validationSubscriptionSchema'
-import { validTypes } from '../utils/validTypesImages'
 
 export const EditSubscription = () => {
   const dispatch = useAppDispatch()

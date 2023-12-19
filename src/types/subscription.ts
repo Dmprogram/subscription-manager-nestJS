@@ -7,7 +7,7 @@ export type TSubscription = {
   day: number
   month: number
   year: number
-  image?: string
+  image: string | null
   paymentFrequency: string
 }
 

@@ -10,7 +10,7 @@ import classes from './DatePicker.module.css'
 
 import { DatePickProps } from './types'
 
-import { todayStartOfTheDay, maxDate, validateDate } from '../utils/validateDate'
+import { todayStartOfTheDay, maxDate, validateDate } from '../../utils/validateDate'
 
 export const DatePick: React.FC<DatePickProps> = ({ setFieldValue, values }) => {
   const [error, setError] = useState<DateValidationError | null>(null)

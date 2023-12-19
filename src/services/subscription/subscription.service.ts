@@ -39,4 +39,15 @@ export const SubscriptionService = {
       method: 'DELETE',
     })
   },
+
+  async uploadImage(data: FormData) {
+    return instance({
+      url: `${SUBSCRIPTIONS}/upload/images`,
+      method: 'POST',
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+      data,
+    })
+  },
 }
