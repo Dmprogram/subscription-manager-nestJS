@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { fetchSubscriptions } from './subscriptionsActions'
+import { createSubscription, fetchSubscriptions } from './subscriptionsActions'
 import { TSubscriptionsState } from './types'
 
 import { TSubscription } from '../../../types/subscription'
@@ -120,15 +120,9 @@ export const subscriptionsSlice = createSlice({
 
         state.fetchedSubscriptions = action.payload
 
-        state.activeSubscriptions = sortByParameter(
-          state.fetchedSubscriptions.filter((el) => el.status),
-          state.sortByParameter,
-        )
+        state.activeSubscriptions = state.fetchedSubscriptions.filter((el) => el.status)
 
-        state.inactiveSubscriptions = sortByParameter(
-          state.fetchedSubscriptions.filter((el) => !el.status),
-          state.sortByParameter,
-        )
+        state.inactiveSubscriptions = state.fetchedSubscriptions.filter((el) => !el.status)
 
         state.averageExpenses = countAverageExpenses(state.activeSubscriptions)
 
@@ -139,6 +133,21 @@ export const subscriptionsSlice = createSlice({
         )
       })
       .addCase(fetchSubscriptions.rejected, (state, action) => {
+        state.loading = 'failed'
+        state.error = action.payload
+      })
+      .addCase(createSubscription.pending, (state) => {
+        state.loading = 'pending'
+      })
+      .addCase(createSubscription.fulfilled, (state, action) => {
+        state.fetchedSubscriptions.push(action.payload)
+        state.activeSubscriptions.push(action.payload)
+        state.loading = 'succeeded'
+
+        // state.isSubCreateSnackBar = true
+        // state.subNameForSnackBar = action.payload.name
+      })
+      .addCase(createSubscription.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload
       })

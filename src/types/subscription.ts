@@ -7,6 +7,16 @@ export type TSubscription = {
   day: number
   month: number
   year: number
-  image: string
+  image?: string
   paymentFrequency: string
+}
+
+export type TCreateSubscription = Omit<TSubscription, 'id'>
+export type TNewSubscriptionValues = Omit<TSubscription, 'id' | 'price' | 'year' | 'month' | 'day'> & {
+  price: string
+  date: null | {
+    day: number
+    month: number
+    year: number
+  }
 }

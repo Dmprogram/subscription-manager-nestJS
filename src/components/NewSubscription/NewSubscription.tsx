@@ -10,9 +10,11 @@ import classes from './NewSubscription.module.css'
 import { NewSubscriptionValues } from './types'
 
 import { useAppDispatch } from '../../hooks/useReduxHooks'
+import { TCreateSubscription, TNewSubscriptionValues } from '../../types/subscription'
 import { DatePick } from '../DatePicker/DatePicker'
 
 import { NotificationAdd } from '../Notifications/NotificationAdd'
+import { createSubscription } from '../store/subscriptions/subscriptionsActions'
 import { addSubscription } from '../store/subscriptions/subscriptionsSlice'
 import {
   validationSubscriptionSchema,
@@ -43,36 +45,33 @@ export const NewSubscription = () => {
     setPreview(objectUrl)
   }, [file])
 
-  const handleSubmit = async (values: NewSubscriptionValues, resetForm: () => void) => {
-    setLoading(true)
-    setDisabledSubmit(true)
-    // const user = auth.currentUser
-    // if (user && values.date) {
+  const handleSubmit = async (values: TNewSubscriptionValues, resetForm: () => void) => {
     if (values.date) {
-      const { name, price, currency, paymentFrequency, date } = values
+      setLoading(true)
+      setDisabledSubmit(true)
+      const { name, price, currency, paymentFrequency, date, image, status } = values
       const newSubscription = {
         name,
-        price: parseFloat(price as string),
+        price: parseFloat(price),
         year: date.year,
         month: date.month,
         day: date.day,
         currency,
         paymentFrequency,
-        imageUrl,
-        status: true,
-        id: '',
+        image,
+        status,
       }
       console.log(newSubscription)
       try {
-        // const docRef = await addDoc(collection(db, 'users', user.uid, 'subscriptions'), newSubscription)
-        // newSubscription.id = docRef.id
-        // dispatch(addSubscription({ newSubscription }))
+        dispatch(createSubscription(newSubscription))
         setLoading(false)
-        setImageUrl('')
         setSubscriptionAdded(true)
         setDisabledSubmit(false)
-        setProgress('Choose an image')
         resetForm()
+
+        // dispatch(addSubscription({ newSubscription }))
+        // setImageUrl('')
+        // setProgress('Choose an image')
       } catch (e) {
         setError(true)
         console.error('Error adding subscription: ', e)
@@ -97,34 +96,38 @@ export const NewSubscription = () => {
       setDisabledSubmit(false)
       setProgress('Invalid format')
       setFile(null)
-      return
     }
-    const storageRef = ref(storage, `images/${file.name}`)
-    const uploadTask = uploadBytesResumable(storageRef, file)
+    const formData = new FormData()
 
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        if (uploadProgress === 100) {
-          setProgress('Upload is almost done')
-        } else {
-          setProgress('Uploading...')
-        }
-        setFile(null)
-      },
-      (err) => {
-        console.log(err)
-        setDisabledSubmit(false)
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setImageUrl(url)
-          setProgress('Uploaded image')
-          setDisabledSubmit(false)
-        })
-      },
-    )
+    formData.append('file', file)
+    console.log(formData)
+
+    // const storageRef = ref(storage, `images/${file.name}`)
+    // const uploadTask = uploadBytesResumable(storageRef, file)
+
+    // uploadTask.on(
+    //   'state_changed',
+    //   (snapshot) => {
+    //     const uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+    //     if (uploadProgress === 100) {
+    //       setProgress('Upload is almost done')
+    //     } else {
+    //       setProgress('Uploading...')
+    //     }
+    //     setFile(null)
+    //   },
+    //   (err) => {
+    //     console.log(err)
+    //     setDisabledSubmit(false)
+    //   },
+    //   () => {
+    //     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //       setImageUrl(url)
+    //       setProgress('Uploaded image')
+    //       setDisabledSubmit(false)
+    //     })
+    //   },
+    // )
   }
   const initialValues = {
     name: '',
@@ -132,10 +135,8 @@ export const NewSubscription = () => {
     currency: '',
     paymentFrequency: '',
     date: null,
-    status: null,
-    imageUrl: null,
-    creationTime: null,
-    id: '',
+    status: true,
+    image: undefined,
   }
 
   const renderError = (message: string) => <p className={classes.error}>{message}</p>
@@ -223,7 +224,15 @@ export const NewSubscription = () => {
                   )) ||
                   'Add new subscription'}
             </button>
-            <button type='button' className={classes.clearButton} onClick={() => resetForm()} disabled={disabledSubmit}>
+            <button
+              type='button'
+              className={classes.clearButton}
+              onClick={() => {
+                resetForm()
+                setFile(null)
+              }}
+              disabled={disabledSubmit}
+            >
               <span>Clear all fields</span>
             </button>
             <NotificationAdd subscriptionAdded={subscriptionAdded} setSubscriptionAdded={setSubscriptionAdded} />
