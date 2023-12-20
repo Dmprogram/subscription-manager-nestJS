@@ -25,7 +25,7 @@ export const SubscriptionService = {
     })
   },
 
-  async update(id: string, data: Partial<TSubscription>) {
+  async update(id: number, data: Partial<TSubscription>) {
     return instance<TSubscription>({
       url: `${SUBSCRIPTIONS}/${id}`,
       method: 'PATCH',

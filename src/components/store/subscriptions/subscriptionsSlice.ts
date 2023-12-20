@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { createSubscription, fetchSubscriptions } from './subscriptionsActions'
+import { createSubscription, editSubscription, deleteSubscription, fetchSubscriptions } from './subscriptionsActions'
 import { TSubscriptionsState } from './types'
 
 import { TSubscription } from '../../../types/subscription'
@@ -50,25 +50,25 @@ export const subscriptionsSlice = createSlice({
       state.activeSubscriptions.push(action.payload.newSubscription)
     },
 
-    deleteSubscription(state, action: PayloadAction<{ subscriptionId: number }>) {
-      state.activeSubscriptions = state.activeSubscriptions.filter((el) => el.id !== action.payload.subscriptionId)
+    // deleteSubscription(state, action: PayloadAction<{ subscriptionId: number }>) {
+    //   state.activeSubscriptions = state.activeSubscriptions.filter((el) => el.id !== action.payload.subscriptionId)
 
-      state.inactiveSubscriptions = state.inactiveSubscriptions.filter((el) => el.id !== action.payload.subscriptionId)
-    },
-    editSubscription(state, action: PayloadAction<{ editedSubscription: TSubscription }>) {
-      const subscriptionActiveIndex = state.activeSubscriptions.findIndex(
-        (el) => el.id === action.payload.editedSubscription.id,
-      )
-      const subscriptionInactiveIndex = state.inactiveSubscriptions.findIndex(
-        (el) => el.id === action.payload.editedSubscription.id,
-      )
-      const subscriptionIndex = state.fetchedSubscriptions.findIndex(
-        (el) => el.id === action.payload.editedSubscription.id,
-      )
-      state.fetchedSubscriptions[subscriptionIndex] = action.payload.editedSubscription
-      state.activeSubscriptions[subscriptionActiveIndex] = action.payload.editedSubscription
-      state.inactiveSubscriptions[subscriptionInactiveIndex] = action.payload.editedSubscription
-    },
+    //   state.inactiveSubscriptions = state.inactiveSubscriptions.filter((el) => el.id !== action.payload.subscriptionId)
+    // },
+    // editSubscription(state, action: PayloadAction<{ editedSubscription: TSubscription }>) {
+    //   const subscriptionActiveIndex = state.activeSubscriptions.findIndex(
+    //     (el) => el.id === action.payload.editedSubscription.id,
+    //   )
+    //   const subscriptionInactiveIndex = state.inactiveSubscriptions.findIndex(
+    //     (el) => el.id === action.payload.editedSubscription.id,
+    //   )
+    //   const subscriptionIndex = state.fetchedSubscriptions.findIndex(
+    //     (el) => el.id === action.payload.editedSubscription.id,
+    //   )
+    //   state.fetchedSubscriptions[subscriptionIndex] = action.payload.editedSubscription
+    //   state.activeSubscriptions[subscriptionActiveIndex] = action.payload.editedSubscription
+    //   state.inactiveSubscriptions[subscriptionInactiveIndex] = action.payload.editedSubscription
+    // },
 
     changeStatus(state, action: PayloadAction<{ status: boolean; id: number }>) {
       const subscription = state.fetchedSubscriptions.find((el) => el.id === action.payload.id)
@@ -151,6 +151,36 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'failed'
         state.error = action.payload
       })
+      .addCase(editSubscription.pending, (state) => {
+        state.loading = 'pending'
+      })
+      .addCase(editSubscription.fulfilled, (state, action) => {
+        // state.fetchedSubscriptions.push(action.payload)
+        // state.activeSubscriptions.push(action.payload)
+        state.loading = 'succeeded'
+
+        // state.isSubCreateSnackBar = true
+        // state.subNameForSnackBar = action.payload.name
+      })
+      .addCase(editSubscription.rejected, (state, action) => {
+        state.loading = 'failed'
+        state.error = action.payload
+      })
+      // .addCase(deleteSubscription.pending, (state) => {
+      //   state.loading = 'pending'
+      // })
+      .addCase(deleteSubscription.fulfilled, (state, action) => {
+        // state.fetchedSubscriptions.push(action.payload)
+        // state.activeSubscriptions.push(action.payload)
+        state.loading = 'succeeded'
+
+        // state.isSubCreateSnackBar = true
+        // state.subNameForSnackBar = action.payload.name
+      })
+      .addCase(deleteSubscription.rejected, (state, action) => {
+        state.loading = 'failed'
+        state.error = action.payload
+      })
   },
 })
 
@@ -161,8 +191,8 @@ export const {
   changeStatus,
   clearAverageExpenses,
   addSubscription,
-  deleteSubscription,
-  editSubscription,
+  // deleteSubscription,
+  // editSubscription,
   updateUpcomingPayments,
   resetState,
 } = subscriptionsSlice.actions

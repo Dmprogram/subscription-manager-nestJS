@@ -1,6 +1,3 @@
-import { doc, setDoc, deleteDoc } from 'firebase/firestore'
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
-
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import React, { useEffect, useRef, useState } from 'react'
 
@@ -8,11 +5,11 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 
 import classes from './EditSubscription.module.css'
 
-import { EditValues } from './types'
-
 import cancel from '../../assets/cancel.png'
 import { useAppSelector, useAppDispatch } from '../../hooks/useReduxHooks'
-import { TSubscription } from '../../types/subscription'
+import { SubscriptionService } from '../../services/subscription/subscription.service'
+import { TSubscription, TSubscriptionEditFormValues } from '../../types/subscription'
+import { resizeImage } from '../../utils/resizeImage'
 import {
   validationSubscriptionSchema,
   currenciesOptions,
@@ -24,7 +21,7 @@ import { DatePick } from '../DatePicker/DatePicker'
 import { NotificationDelete } from '../Notifications/NotificationDelete'
 import { NotificationEdit } from '../Notifications/NotificationEdit'
 import { Spinner } from '../Spinner/Spinner'
-import { deleteSubscription, editSubscription } from '../store/subscriptions/subscriptionsSlice'
+import { deleteSubscription, editSubscription } from '../store/subscriptions/subscriptionsActions'
 
 export const EditSubscription = () => {
   const dispatch = useAppDispatch()
@@ -35,7 +32,7 @@ export const EditSubscription = () => {
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [progress, setProgress] = useState('Choose new image')
-  const [newImageUrl, setNewImageUrl] = useState<null | string>(null)
+  const [newImage, setNewImage] = useState<null | string>(null)
   const [preview, setPreview] = useState('')
   const [subscriptionDelete, setSubscriptionDelete] = useState(false)
   const [subscriptionEdit, setSubscriptionEdit] = useState(false)
@@ -43,12 +40,6 @@ export const EditSubscription = () => {
   const [openAlert, setOpenAlert] = useState(false)
   const [loadingEdit, setLoadingEdit] = useState(false)
   const [error, setError] = useState(false)
-
-  // useEffect(() => {
-  //   if (fetchedSubscriptions.length === 0) {
-  //     dispatch(fetchSubscriptionsList())
-  //   }
-  // }, [fetchedSubscriptions.length, dispatch])
 
   useEffect(() => {
     if (!file) {
@@ -62,66 +53,53 @@ export const EditSubscription = () => {
     setOpenAlert(true)
   }
 
-  const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    if (ev.target.files !== null) {
-      setFile(ev.target.files[0])
-    }
-  }
-
-  const uploadImage = () => {
-    setDisabledSubmit(true)
-    if (!file) {
-      setDisabledSubmit(false)
-      setNewImageUrl(null)
-      setProgress('Image is missing')
-      return
-    }
-    if (!validTypes.includes(file.type.split('/')[1])) {
-      setDisabledSubmit(false)
+  const handleChangeImage = async (ev: React.ChangeEvent<HTMLInputElement>) => {
+    if (!ev.target.files) return
+    if (ev.target.files[0] === undefined) return
+    if (validTypes.includes(ev.target.files[0].type.split('/')[1])) {
+      const image: File = await resizeImage(ev.target.files[0])
+      setFile(image)
+    } else {
       setProgress('Invalid format')
       setFile(null)
     }
-    // const storageRef = ref(storage, `images/${file.name}`)
-    // const uploadTask = uploadBytesResumable(storageRef, file)
+  }
 
-    // uploadTask.on(
-    //   'state_changed',
-    //   (snapshot) => {
-    //     const uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-    //     if (uploadProgress === 100) {
-    //       setProgress('Upload is almost done')
-    //     } else {
-    //       setProgress('Uploading...')
-    //     }
-    //     setFile(null)
-    //   },
-    //   (err) => {
-    //     console.log(err)
-    //   },
-    //   () => {
-    //     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-    //       setNewImageUrl(url)
-    //       setProgress('Uploaded image')
-    //       setDisabledSubmit(false)
-    //     })
-    //   },
-    // )
+  const handleUploadImage = async () => {
+    setDisabledSubmit(true)
+    if (!file) {
+      setDisabledSubmit(false)
+      setNewImage(null)
+      setProgress('Image is missing')
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('image', file)
+    try {
+      setFile(null)
+      setNewImage(null)
+
+      setProgress('Uploading...')
+      const image = await SubscriptionService.uploadImage(formData)
+
+      setNewImage(image.data.secure_url)
+      setProgress('Uploaded image')
+      setDisabledSubmit(false)
+    } catch (err) {
+      console.log(err)
+      setDisabledSubmit(false)
+    }
   }
 
   const handleDeleteSubscription = async () => {
     setDisabledSubmit(true)
-    const user = auth.currentUser
-    if (user && subscriptionId) {
-      try {
-        await deleteDoc(doc(db, 'users', user.uid, 'subscriptions', subscriptionId))
-        dispatch(deleteSubscription({ subscriptionId }))
-        setSubscriptionDelete(true)
-        setTimeout(() => {
-          navigate('/active-subscriptions')
-        }, 1500)
-      } catch (e) {
-        console.error('Error delete subscription: ', e)
-      }
+    try {
+      dispatch(deleteSubscription(subscriptionId as string))
+      setSubscriptionDelete(true)
+      navigate('/active-subscriptions')
+    } catch (e) {
+      console.error('Error delete subscription: ', e)
     }
   }
 
@@ -129,50 +107,47 @@ export const EditSubscription = () => {
     if (deleteSubscriptionBoolean) {
       handleDeleteSubscription()
     }
-  })
+  }, [deleteSubscriptionBoolean])
 
   const subscription = fetchedSubscriptions.find(
     (el: TSubscription) => el.id === parseInt(subscriptionId as string, 10),
   )
-  const handleSubmit = async (values: EditValues) => {
+  const handleSubmit = async (values: TSubscriptionEditFormValues) => {
     setLoadingEdit(true)
     setDisabledSubmit(true)
-    const user = auth.currentUser
-    if (user && values.date && subscription) {
-      const { name, price, currency, paymentFrequency, date, id } = values
+    if (values.year && values.month && values.day && subscription) {
+      const { name, price, currency, paymentFrequency, year, month, day, id, status, image } = values
       const editedSubscription = {
+        id,
         name,
-        price: parseFloat(price as string),
-        year: date.year,
-        month: date.month,
-        day: date.day,
+        price: typeof price === 'string' ? parseFloat(price) : price,
+        year,
+        month,
+        day,
         currency,
         paymentFrequency,
-        image: newImageUrl,
-        id: subscription.id,
-        status: subscription.status,
+        image: newImage || image,
+        status,
       }
       try {
-        await setDoc(doc(db, 'users', user.uid, 'subscriptions', id), editedSubscription)
-        dispatch(editSubscription({ editedSubscription }))
+        dispatch(editSubscription(editedSubscription))
+
         setLoadingEdit(false)
         setSubscriptionEdit(true)
-        setTimeout(() => {
-          navigate('/active-subscriptions')
-        }, 1500)
+        navigate('/active-subscriptions')
       } catch (e) {
         setError(true)
         console.error('Error edit subscription: ', e)
       }
     }
   }
+
   const windowWidth = useRef(window.innerWidth)
   const uploadText = windowWidth.current < 568 ? 'Upload' : 'Click to Upload'
   const renderError = (message: string) => <p className={classes.error}>{message}</p>
   const disabledInput = disabledSubmit ? classes.inActiveUpload : classes.activeUpload
   if (loading === 'pending') return <Spinner />
   if (loading === 'succeeded' && subscription !== undefined) {
-    console.log(subscription)
     return (
       <Formik
         initialValues={subscription}
@@ -195,7 +170,7 @@ export const EditSubscription = () => {
               </div>
               <div className={classes.field}>
                 <label htmlFor='datePicker'>Next payment</label>
-                <DatePick setFieldValue={setFieldValue} values={values} />
+                <DatePick setFieldValue={setFieldValue} year={values.year} month={values.month} day={values.day} />
               </div>
               <div className={classes.field}>
                 <label htmlFor='currency'>Currency</label>
@@ -221,7 +196,7 @@ export const EditSubscription = () => {
                     id='file'
                     accept='image/*'
                     className={classes.inputImage}
-                    onChange={handleChange}
+                    onChange={handleChangeImage}
                     name='file'
                     disabled={disabledSubmit}
                   />
@@ -233,16 +208,27 @@ export const EditSubscription = () => {
                           <img src={preview} className={classes.image} alt='preview' />
                         </div>
                       )) ??
-                        ((newImageUrl && (
+                        ((newImage && (
                           <div className={classes.imageContainer}>
                             {progress} <img src={preview} className={classes.image} alt='preview' />
                           </div>
                         )) ||
-                          progress)}
+                          (progress === 'Uploading...' ? (
+                            <div className={classes.imageContainer}>
+                              <div className={classes.loader} />
+                            </div>
+                          ) : (
+                            progress
+                          )))}
                     </div>
                   </div>
                 </label>
-                <button type='button' onClick={uploadImage} className={classes.buttonUpload} disabled={disabledSubmit}>
+                <button
+                  type='button'
+                  onClick={handleUploadImage}
+                  className={classes.buttonUpload}
+                  disabled={disabledSubmit}
+                >
                   {uploadText}
                 </button>
               </div>

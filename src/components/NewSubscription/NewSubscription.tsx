@@ -6,7 +6,7 @@ import classes from './NewSubscription.module.css'
 
 import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { SubscriptionService } from '../../services/subscription/subscription.service'
-import { TSubscriptionFormValues } from '../../types/subscription'
+import { TSubscriptionCreateFormValues } from '../../types/subscription'
 import { resizeImage } from '../../utils/resizeImage'
 import {
   validationSubscriptionSchema,
@@ -27,7 +27,7 @@ export const NewSubscription = () => {
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [progress, setProgress] = useState('Choose an image')
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [image, setImage] = useState<string | null>(null)
   const [preview, setPreview] = useState('')
   const [subscriptionAdded, setSubscriptionAdded] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -42,34 +42,35 @@ export const NewSubscription = () => {
   }, [file])
 
   const handleChangeImage = async (ev: React.ChangeEvent<HTMLInputElement>) => {
-    if (ev.target.files !== null) {
+    if (!ev.target.files) return
+    if (ev.target.files[0] === undefined) return
+    if (validTypes.includes(ev.target.files[0].type.split('/')[1])) {
       const image: File = await resizeImage(ev.target.files[0])
       setFile(image)
+    } else {
+      setProgress('Invalid format')
+      setFile(null)
     }
   }
+
   const handleUploadImage = async () => {
     setDisabledSubmit(true)
     if (!file) {
       setDisabledSubmit(false)
-      setImageUrl(null)
+      setImage(null)
       setProgress('Image is missing')
       return
-    }
-    if (!validTypes.includes(file.type.split('/')[1])) {
-      setDisabledSubmit(false)
-      setProgress('Invalid format')
-      setFile(null)
     }
     const formData = new FormData()
 
     formData.append('image', file)
     try {
       setFile(null)
-      setImageUrl(null)
+      setImage(null)
       setProgress('Uploading...')
       const image = await SubscriptionService.uploadImage(formData)
 
-      setImageUrl(image.data.secure_url)
+      setImage(image.data.secure_url)
       setProgress('Uploaded image')
       setDisabledSubmit(false)
     } catch (err) {
@@ -78,7 +79,7 @@ export const NewSubscription = () => {
     }
   }
 
-  const handleSubmit = async (values: TSubscriptionFormValues, resetForm: () => void) => {
+  const handleSubmit = async (values: TSubscriptionCreateFormValues, resetForm: () => void) => {
     if (values.year && values.month && values.day) {
       setLoading(true)
       setDisabledSubmit(true)
@@ -91,7 +92,7 @@ export const NewSubscription = () => {
         day,
         currency,
         paymentFrequency,
-        image: imageUrl,
+        image,
         status,
       }
       try {
@@ -100,7 +101,7 @@ export const NewSubscription = () => {
         setSubscriptionAdded(true)
         setDisabledSubmit(false)
         setFile(null)
-        setImageUrl(null)
+        setImage(null)
         resetForm()
         setProgress('Choose an image')
       } catch (e) {
@@ -183,7 +184,7 @@ export const NewSubscription = () => {
                       <img src={preview} className={classes.image} alt='preview' />
                     </div>
                   )) ??
-                    ((imageUrl && (
+                    ((image && (
                       <div className={classes.imageContainer}>
                         {progress} <img src={preview} className={classes.image} alt='preview' />
                       </div>

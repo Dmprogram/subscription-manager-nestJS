@@ -13,11 +13,15 @@ export type TSubscription = {
 
 export type TSubscriptionCreateValues = Omit<TSubscription, 'id'>
 
-export type TSubscriptionFormValues = Omit<TSubscriptionCreateValues, 'price' | 'day' | 'month' | 'year'> & {
+export type TSubscriptionCreateFormValues = Omit<TSubscriptionCreateValues, 'price' | 'day' | 'month' | 'year'> & {
   price: string
   year: number | null
   month: number | null
   day: number | null
+}
+
+export type TSubscriptionEditFormValues = Omit<TSubscription, 'price'> & {
+  price: string | number
 }
 // export type TNewSubscriptionValues = Omit<TSubscription, 'id' | 'price' | 'year' | 'month' | 'day'> & {
 //   price: string
