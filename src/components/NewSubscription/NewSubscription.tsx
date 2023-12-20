@@ -6,7 +6,7 @@ import classes from './NewSubscription.module.css'
 
 import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { SubscriptionService } from '../../services/subscription/subscription.service'
-import { TNewSubscriptionValues } from '../../types/subscription'
+import { TSubscriptionFormValues } from '../../types/subscription'
 import { resizeImage } from '../../utils/resizeImage'
 import {
   validationSubscriptionSchema,
@@ -78,17 +78,17 @@ export const NewSubscription = () => {
     }
   }
 
-  const handleSubmit = async (values: TNewSubscriptionValues, resetForm: () => void) => {
-    if (values.date) {
+  const handleSubmit = async (values: TSubscriptionFormValues, resetForm: () => void) => {
+    if (values.year && values.month && values.day) {
       setLoading(true)
       setDisabledSubmit(true)
-      const { name, price, currency, paymentFrequency, date, status } = values
+      const { name, price, currency, paymentFrequency, year, month, day, status } = values
       const newSubscription = {
         name,
         price: parseFloat(price),
-        year: date.year,
-        month: date.month,
-        day: date.day,
+        year,
+        month,
+        day,
         currency,
         paymentFrequency,
         image: imageUrl,
@@ -115,7 +115,9 @@ export const NewSubscription = () => {
     price: '',
     currency: '',
     paymentFrequency: '',
-    date: null,
+    year: null,
+    month: null,
+    day: null,
     status: true,
     image: null,
   }
@@ -144,7 +146,7 @@ export const NewSubscription = () => {
             </div>
             <div className={classes.field}>
               <label htmlFor='datePicker'>Next payment</label>
-              <DatePick setFieldValue={setFieldValue} values={values} />
+              <DatePick setFieldValue={setFieldValue} year={values.year} month={values.month} day={values.day} />
             </div>
             <div className={classes.field}>
               <label htmlFor='currency'>Currency</label>

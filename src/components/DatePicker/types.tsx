@@ -1,7 +1,6 @@
-import { NewSubscriptionValues } from '../NewSubscription/types'
-import { Subscription } from '../store/subscriptions/types'
-
-export type DatePickProps = {
-  setFieldValue: (first: string, second: { day: number; year: number; month: number } | null, third: boolean) => void
-  values: Subscription | NewSubscriptionValues
+export type TDatePick = {
+  setFieldValue: (first: string, second: number | null, third: boolean) => void
+  year: number | null
+  month: number | null
+  day: number | null
 }

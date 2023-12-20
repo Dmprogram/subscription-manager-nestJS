@@ -29,7 +29,7 @@ import { deleteSubscription, editSubscription } from '../store/subscriptions/sub
 export const EditSubscription = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { subscriptionId } = useParams()
+  const { subscriptionId } = useParams<'subscriptionId'>()
   const { fetchedSubscriptions, loading } = useAppSelector((state) => state.subscriptionsList)
 
   const [disabledSubmit, setDisabledSubmit] = useState(false)
@@ -44,11 +44,11 @@ export const EditSubscription = () => {
   const [loadingEdit, setLoadingEdit] = useState(false)
   const [error, setError] = useState(false)
 
-  useEffect(() => {
-    if (fetchedSubscriptions.length === 0) {
-      dispatch(fetchSubscriptionsList())
-    }
-  }, [fetchedSubscriptions.length, dispatch])
+  // useEffect(() => {
+  //   if (fetchedSubscriptions.length === 0) {
+  //     dispatch(fetchSubscriptionsList())
+  //   }
+  // }, [fetchedSubscriptions.length, dispatch])
 
   useEffect(() => {
     if (!file) {
@@ -80,33 +80,32 @@ export const EditSubscription = () => {
       setDisabledSubmit(false)
       setProgress('Invalid format')
       setFile(null)
-      return
     }
-    const storageRef = ref(storage, `images/${file.name}`)
-    const uploadTask = uploadBytesResumable(storageRef, file)
+    // const storageRef = ref(storage, `images/${file.name}`)
+    // const uploadTask = uploadBytesResumable(storageRef, file)
 
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        if (uploadProgress === 100) {
-          setProgress('Upload is almost done')
-        } else {
-          setProgress('Uploading...')
-        }
-        setFile(null)
-      },
-      (err) => {
-        console.log(err)
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setNewImageUrl(url)
-          setProgress('Uploaded image')
-          setDisabledSubmit(false)
-        })
-      },
-    )
+    // uploadTask.on(
+    //   'state_changed',
+    //   (snapshot) => {
+    //     const uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+    //     if (uploadProgress === 100) {
+    //       setProgress('Upload is almost done')
+    //     } else {
+    //       setProgress('Uploading...')
+    //     }
+    //     setFile(null)
+    //   },
+    //   (err) => {
+    //     console.log(err)
+    //   },
+    //   () => {
+    //     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //       setNewImageUrl(url)
+    //       setProgress('Uploaded image')
+    //       setDisabledSubmit(false)
+    //     })
+    //   },
+    // )
   }
 
   const handleDeleteSubscription = async () => {
@@ -131,8 +130,10 @@ export const EditSubscription = () => {
       handleDeleteSubscription()
     }
   })
-  const subscription = fetchedSubscriptions.find((el: TSubscription) => el.id === subscriptionId)
 
+  const subscription = fetchedSubscriptions.find(
+    (el: TSubscription) => el.id === parseInt(subscriptionId as string, 10),
+  )
   const handleSubmit = async (values: EditValues) => {
     setLoadingEdit(true)
     setDisabledSubmit(true)
@@ -142,12 +143,13 @@ export const EditSubscription = () => {
       const editedSubscription = {
         name,
         price: parseFloat(price as string),
-        date,
+        year: date.year,
+        month: date.month,
+        day: date.day,
         currency,
         paymentFrequency,
-        imageUrl: newImageUrl,
+        image: newImageUrl,
         id: subscription.id,
-        creationTime: subscription.creationTime,
         status: subscription.status,
       }
       try {
@@ -170,6 +172,7 @@ export const EditSubscription = () => {
   const disabledInput = disabledSubmit ? classes.inActiveUpload : classes.activeUpload
   if (loading === 'pending') return <Spinner />
   if (loading === 'succeeded' && subscription !== undefined) {
+    console.log(subscription)
     return (
       <Formik
         initialValues={subscription}

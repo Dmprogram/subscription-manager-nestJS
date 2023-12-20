@@ -11,12 +11,19 @@ export type TSubscription = {
   paymentFrequency: string
 }
 
-export type TCreateSubscription = Omit<TSubscription, 'id'>
-export type TNewSubscriptionValues = Omit<TSubscription, 'id' | 'price' | 'year' | 'month' | 'day'> & {
+export type TSubscriptionCreateValues = Omit<TSubscription, 'id'>
+
+export type TSubscriptionFormValues = Omit<TSubscriptionCreateValues, 'price' | 'day' | 'month' | 'year'> & {
   price: string
-  date: null | {
-    day: number
-    month: number
-    year: number
-  }
+  year: number | null
+  month: number | null
+  day: number | null
 }
+// export type TNewSubscriptionValues = Omit<TSubscription, 'id' | 'price' | 'year' | 'month' | 'day'> & {
+//   price: string
+//   date: null | {
+//     day: number
+//     month: number
+//     year: number
+//   }
+// }

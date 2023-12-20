@@ -8,11 +8,11 @@ import React, { useState, useMemo } from 'react'
 import 'dayjs/locale/en-gb'
 import classes from './DatePicker.module.css'
 
-import { DatePickProps } from './types'
+import { TDatePick } from './types'
 
 import { todayStartOfTheDay, maxDate, validateDate } from '../../utils/validateDate'
 
-export const DatePick: React.FC<DatePickProps> = ({ setFieldValue, values }) => {
+export const DatePick: React.FC<TDatePick> = ({ setFieldValue, year, month, day }) => {
   const [error, setError] = useState<DateValidationError | null>(null)
   const errorMessage = useMemo(() => {
     switch (error) {
@@ -38,9 +38,15 @@ export const DatePick: React.FC<DatePickProps> = ({ setFieldValue, values }) => 
             className={classes.picker}
             onError={(newError) => setError(newError)}
             formatDensity='spacious'
-            value={values.date ? dayjs(`${values.date.year}-${values.date.month}-${values.date.day}`) : null}
+            value={year && month && day ? dayjs(`${year}-${month}-${day}`) : null}
             onChange={(value) => {
-              setFieldValue('date', validateDate(value), true)
+              const date = validateDate(value)
+              if (date !== null) {
+                const { year, month, day } = date
+                setFieldValue('year', year, true)
+                setFieldValue('month', month, true)
+                setFieldValue('day', day, true)
+              }
             }}
             orientation='portrait'
             slotProps={{

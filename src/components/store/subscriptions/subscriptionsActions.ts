@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { AxiosError } from 'axios'
 
 import { SubscriptionService } from '../../../services/subscription/subscription.service'
-import { TCreateSubscription, TSubscription } from '../../../types/subscription'
+import { TSubscriptionCreateValues, TSubscription } from '../../../types/subscription'
 import { TErrorData } from '../user/types'
 
 export const fetchSubscriptions = createAsyncThunk<TSubscription[]>(
@@ -22,7 +22,7 @@ export const fetchSubscriptions = createAsyncThunk<TSubscription[]>(
     }
   },
 )
-export const createSubscription = createAsyncThunk<TSubscription, TCreateSubscription>(
+export const createSubscription = createAsyncThunk<TSubscription, TSubscriptionCreateValues>(
   'subscriptions/createSubscription',
   async (data, { rejectWithValue }) => {
     try {

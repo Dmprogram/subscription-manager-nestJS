@@ -1,5 +1,5 @@
 import { instance } from '../../api/api.interceptor'
-import { TSubscription } from '../../types/subscription'
+import { TSubscription, TSubscriptionCreateValues } from '../../types/subscription'
 
 const SUBSCRIPTIONS = 'subscriptions'
 export const SubscriptionService = {
@@ -17,7 +17,7 @@ export const SubscriptionService = {
     })
   },
 
-  async create(data: Omit<TSubscription, 'createdAt' | 'id'>) {
+  async create(data: TSubscriptionCreateValues) {
     return instance<TSubscription>({
       url: SUBSCRIPTIONS,
       method: 'POST',
