@@ -179,6 +179,16 @@
   color: rgb(223 33 33);
 }
 
+.axiosError {
+  display: flex;
+  justify-content: flex-start;
+
+  margin-top: -25px;
+  margin-bottom: 10px;
+
+  color: rgb(223 33 33);
+}
+
 .clearButton {
   width: 100%;
   margin: 20px 0 40px;

@@ -31,7 +31,7 @@ export const NewSubscription = () => {
   const [preview, setPreview] = useState('')
   const [subscriptionAdded, setSubscriptionAdded] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState<string | boolean>(false)
 
   useEffect(() => {
     if (!file) {
@@ -42,6 +42,7 @@ export const NewSubscription = () => {
   }, [file])
 
   const handleChangeImage = async (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setError(false)
     if (!ev.target.files) return
     if (ev.target.files[0] === undefined) return
     if (validTypes.includes(ev.target.files[0].type.split('/')[1])) {
@@ -55,6 +56,7 @@ export const NewSubscription = () => {
 
   const handleUploadImage = async () => {
     setDisabledSubmit(true)
+    setError(false)
     if (!file) {
       setDisabledSubmit(false)
       setImage(null)
@@ -62,7 +64,6 @@ export const NewSubscription = () => {
       return
     }
     const formData = new FormData()
-
     formData.append('image', file)
     try {
       setFile(null)
@@ -74,8 +75,9 @@ export const NewSubscription = () => {
       setProgress('Uploaded image')
       setDisabledSubmit(false)
     } catch (err) {
-      console.log(err)
+      setProgress('Choose an image')
       setDisabledSubmit(false)
+      setError('Image upload failed, we fix it')
     }
   }
 
@@ -105,7 +107,7 @@ export const NewSubscription = () => {
         resetForm()
         setProgress('Choose an image')
       } catch (e) {
-        setError(true)
+        setError('Create subscription failed, we fix it')
         console.error('Error adding subscription: ', e)
       }
     }
@@ -207,16 +209,15 @@ export const NewSubscription = () => {
                 {uploadText}
               </button>
             </div>
+            {error && <div className={classes.axiosError}>{error}</div>}
             <button name='button' type='submit' className={classes.buttonSubmit} disabled={disabledSubmit}>
-              {error
-                ? 'Something went wrong, but we fix it'
-                : (loading && (
-                    <div className={classes.loaderContainer}>
-                      Loading...
-                      <div className={classes.loader} />
-                    </div>
-                  )) ||
-                  'Add new subscription'}
+              {(loading && (
+                <div className={classes.loaderContainer}>
+                  Loading...
+                  <div className={classes.loader} />
+                </div>
+              )) ||
+                'Add new subscription'}
             </button>
             <button
               type='button'

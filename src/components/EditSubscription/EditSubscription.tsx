@@ -39,7 +39,7 @@ export const EditSubscription = () => {
   const [deleteSubscriptionBoolean, setDeleteSubscription] = useState(false)
   const [openAlert, setOpenAlert] = useState(false)
   const [loadingEdit, setLoadingEdit] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState<string | boolean>(false)
 
   useEffect(() => {
     if (!file) {
@@ -54,6 +54,7 @@ export const EditSubscription = () => {
   }
 
   const handleChangeImage = async (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setError(false)
     if (!ev.target.files) return
     if (ev.target.files[0] === undefined) return
     if (validTypes.includes(ev.target.files[0].type.split('/')[1])) {
@@ -66,6 +67,7 @@ export const EditSubscription = () => {
   }
 
   const handleUploadImage = async () => {
+    setError(false)
     setDisabledSubmit(true)
     if (!file) {
       setDisabledSubmit(false)
@@ -88,6 +90,8 @@ export const EditSubscription = () => {
       setDisabledSubmit(false)
     } catch (err) {
       console.log(err)
+      setProgress('Choose an image')
+      setError('Image upload failed, we fix it')
       setDisabledSubmit(false)
     }
   }
@@ -99,6 +103,7 @@ export const EditSubscription = () => {
       setSubscriptionDelete(true)
       navigate('/active-subscriptions')
     } catch (e) {
+      setError('Subscription delete failed')
       console.error('Error delete subscription: ', e)
     }
   }
@@ -115,6 +120,7 @@ export const EditSubscription = () => {
   const handleSubmit = async (values: TSubscriptionEditFormValues) => {
     setLoadingEdit(true)
     setDisabledSubmit(true)
+
     if (values.year && values.month && values.day && subscription) {
       const { name, price, currency, paymentFrequency, year, month, day, id, status, image } = values
       const editedSubscription = {
@@ -136,7 +142,7 @@ export const EditSubscription = () => {
         setSubscriptionEdit(true)
         navigate('/active-subscriptions')
       } catch (e) {
-        setError(true)
+        setError('Edit subscription failed, we fix it')
         console.error('Error edit subscription: ', e)
       }
     }
@@ -232,16 +238,15 @@ export const EditSubscription = () => {
                   {uploadText}
                 </button>
               </div>
+              {error && <div className={classes.axiosError}>{error}</div>}
               <button name='button' type='submit' className={classes.buttonSubmit} disabled={disabledSubmit}>
-                {error
-                  ? 'Something went wrong, but we fix it'
-                  : (loadingEdit && (
-                      <div className={classes.loaderContainer}>
-                        Loading...
-                        <div className={classes.loader} />
-                      </div>
-                    )) ||
-                    'Edit Your Subscription'}
+                {(loadingEdit && (
+                  <div className={classes.loaderContainer}>
+                    Loading...
+                    <div className={classes.loader} />
+                  </div>
+                )) ||
+                  'Edit Your Subscription'}
               </button>
               <button
                 type='button'
