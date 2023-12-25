@@ -10,9 +10,11 @@ import { SubscriptionItem } from '../SubscriptionItem/SubscriptionItem'
 import { SubscriptionsSkeleton } from '../SubscriptionsSkeleton/SubscriptionsSkeleton'
 
 export const InactiveSubscriptions = () => {
-  const { inactiveSubscriptions, loading, inputSearch, searchSubsciptions } = useAppSelector(
-    (state) => state.subscriptionsList,
-  )
+  const { subscriptions, loading, inputSearch } = useAppSelector((state) => state.subscriptions)
+  const inactiveSubscriptions = subscriptions.filter((el) => !el.status)
+
+  const searchSubsciptions = subscriptions.filter((el) => el.name.toLowerCase().startsWith(inputSearch.toLowerCase()))
+
   const [parent] = useAutoAnimate({
     duration: 300,
     easing: 'ease-in-out',

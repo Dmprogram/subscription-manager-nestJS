@@ -3,12 +3,16 @@ import classes from './UpcomingPayments.module.css'
 import { useAppSelector } from '../../hooks/useReduxHooks'
 import { TSubscription } from '../../types/subscription'
 
+import { sortPaymentsToOldest } from '../../utils/sortPaymentsToOldest'
 import { UpcomingPaymentsItem } from '../UpcomingPaymentsItem/UpcomingPaymentsItem'
 import { UpcomingPaymentsSkeleton } from '../UpcomingPaymentsSkeleton/UpcomingPaymentsSkeleton'
 
 export const UpcomingPayments = () => {
-  const { upcomingPayments, loading } = useAppSelector((state) => state.subscriptionsList)
-
+  const { subscriptions, loading } = useAppSelector((state) => state.subscriptions)
+  const upcomingPayments = sortPaymentsToOldest(
+    subscriptions.filter((el) => el.status),
+    3,
+  )
   if (loading === 'pending')
     return (
       <section className={classes.payments}>

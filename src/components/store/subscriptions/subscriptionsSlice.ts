@@ -3,28 +3,16 @@ import { createSlice } from '@reduxjs/toolkit'
 import { createSubscription, editSubscription, deleteSubscription, fetchSubscriptions } from './subscriptionsActions'
 import { TSubscriptionsState } from './types'
 
-import { TSubscription } from '../../../types/subscription'
-import { countAverageExpenses } from '../../../utils/countAverageExpenses'
 import { sortByParameter } from '../../../utils/sortByParameter'
-import { sortPaymentsToOldest } from '../../../utils/sortPaymentsToOldest'
 
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 const initialState = {
   loading: 'idle',
   error: null,
-  fetchedSubscriptions: [],
-  activeSubscriptions: [],
-  inactiveSubscriptions: [],
-  upcomingPayments: [],
-  searchSubsciptions: [],
+  subscriptions: [],
   inputSearch: '',
   sortByParameter: null,
-  averageExpenses: {
-    averageExpensesRub: null,
-    averageExpensesUsd: null,
-    averageExpensesEur: null,
-  },
 } as TSubscriptionsState
 
 export const subscriptionsSlice = createSlice({
@@ -35,40 +23,7 @@ export const subscriptionsSlice = createSlice({
 
     findSubscription(state, action: PayloadAction<{ inputSearch: string }>) {
       state.inputSearch = action.payload.inputSearch
-      state.searchSubsciptions = state.fetchedSubscriptions.filter((el) =>
-        el.name.toLowerCase().startsWith(action.payload.inputSearch.toLowerCase()),
-      )
     },
-
-    updateUpcomingPayments(state) {
-      state.upcomingPayments = sortPaymentsToOldest(state.activeSubscriptions, 3)
-      state.averageExpenses = countAverageExpenses(state.activeSubscriptions)
-    },
-
-    addSubscription(state, action: PayloadAction<{ newSubscription: TSubscription }>) {
-      state.fetchedSubscriptions.push(action.payload.newSubscription)
-      state.activeSubscriptions.push(action.payload.newSubscription)
-    },
-
-    // deleteSubscription(state, action: PayloadAction<{ subscriptionId: number }>) {
-    //   state.activeSubscriptions = state.activeSubscriptions.filter((el) => el.id !== action.payload.subscriptionId)
-
-    //   state.inactiveSubscriptions = state.inactiveSubscriptions.filter((el) => el.id !== action.payload.subscriptionId)
-    // },
-    // editSubscription(state, action: PayloadAction<{ editedSubscription: TSubscription }>) {
-    //   const subscriptionActiveIndex = state.activeSubscriptions.findIndex(
-    //     (el) => el.id === action.payload.editedSubscription.id,
-    //   )
-    //   const subscriptionInactiveIndex = state.inactiveSubscriptions.findIndex(
-    //     (el) => el.id === action.payload.editedSubscription.id,
-    //   )
-    //   const subscriptionIndex = state.fetchedSubscriptions.findIndex(
-    //     (el) => el.id === action.payload.editedSubscription.id,
-    //   )
-    //   state.fetchedSubscriptions[subscriptionIndex] = action.payload.editedSubscription
-    //   state.activeSubscriptions[subscriptionActiveIndex] = action.payload.editedSubscription
-    //   state.inactiveSubscriptions[subscriptionInactiveIndex] = action.payload.editedSubscription
-    // },
 
     changeStatus(state, action: PayloadAction<{ status: boolean; id: number }>) {
       const subscription = state.fetchedSubscriptions.find((el) => el.id === action.payload.id)
@@ -88,24 +43,10 @@ export const subscriptionsSlice = createSlice({
       state.inputSearch = ''
     },
 
-    clearAverageExpenses(state) {
-      state.averageExpenses = {
-        averageExpensesRub: null,
-        averageExpensesUsd: null,
-        averageExpensesEur: null,
-      }
-    },
-
     addSortByParameter(state, action: PayloadAction<{ sortByParameter: string | null }>) {
       state.sortByParameter = action.payload.sortByParameter
-      state.activeSubscriptions = sortByParameter(
-        state.fetchedSubscriptions.filter((el) => el.status),
-        state.sortByParameter,
-      )
-      state.inactiveSubscriptions = sortByParameter(
-        state.fetchedSubscriptions.filter((el) => !el.status),
-        state.sortByParameter,
-      )
+
+      state.subscriptions = sortByParameter(state.subscriptions, state.sortByParameter)
     },
   },
   extraReducers: (builder) => {
@@ -118,19 +59,7 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'succeeded'
         state.error = null
 
-        state.fetchedSubscriptions = action.payload
-
-        state.activeSubscriptions = state.fetchedSubscriptions.filter((el) => el.status)
-
-        state.inactiveSubscriptions = state.fetchedSubscriptions.filter((el) => !el.status)
-
-        state.averageExpenses = countAverageExpenses(state.activeSubscriptions)
-
-        state.upcomingPayments = sortPaymentsToOldest(state.activeSubscriptions, 3)
-
-        state.searchSubsciptions = state.fetchedSubscriptions.filter((el) =>
-          el.name.toLowerCase().startsWith(state.inputSearch.toLowerCase()),
-        )
+        state.subscriptions = sortByParameter(action.payload, null)
       })
       .addCase(fetchSubscriptions.rejected, (state, action) => {
         state.loading = 'failed'
@@ -140,8 +69,7 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'pending'
       })
       .addCase(createSubscription.fulfilled, (state, action) => {
-        state.fetchedSubscriptions.push(action.payload)
-        state.activeSubscriptions.push(action.payload)
+        state.subscriptions.push(action.payload)
         state.loading = 'succeeded'
 
         // state.isSubCreateSnackBar = true
@@ -155,10 +83,9 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'pending'
       })
       .addCase(editSubscription.fulfilled, (state, action) => {
-        // state.fetchedSubscriptions.push(action.payload)
-        // state.activeSubscriptions.push(action.payload)
         state.loading = 'succeeded'
-
+        const editSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
+        state.subscriptions[editSubscriptionIndex] = action.payload
         // state.isSubCreateSnackBar = true
         // state.subNameForSnackBar = action.payload.name
       })
@@ -166,14 +93,13 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'failed'
         state.error = action.payload
       })
-      // .addCase(deleteSubscription.pending, (state) => {
-      //   state.loading = 'pending'
-      // })
+      .addCase(deleteSubscription.pending, (state) => {
+        state.loading = 'pending'
+      })
       .addCase(deleteSubscription.fulfilled, (state, action) => {
-        // state.fetchedSubscriptions.push(action.payload)
-        // state.activeSubscriptions.push(action.payload)
         state.loading = 'succeeded'
-
+        const deleteSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
+        state.subscriptions.splice(deleteSubscriptionIndex, 1)
         // state.isSubCreateSnackBar = true
         // state.subNameForSnackBar = action.payload.name
       })
@@ -189,10 +115,6 @@ export const {
   clearSearchAndSortFields,
   addSortByParameter,
   changeStatus,
-  clearAverageExpenses,
-  addSubscription,
-  // deleteSubscription,
-  // editSubscription,
-  updateUpcomingPayments,
+
   resetState,
 } = subscriptionsSlice.actions

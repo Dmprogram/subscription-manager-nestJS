@@ -57,6 +57,8 @@ export const sortByParameter = (fetchedSubscriptions: Array<TSubscription>, para
       return sortPaymentsToZ(fetchedSubscriptions)
     case 'alphabetToA':
       return sortPaymentsToA(fetchedSubscriptions)
+    case null:
+      return sortPaymentsToOldest(fetchedSubscriptions, fetchedSubscriptions.length)
     default:
       return fetchedSubscriptions
   }

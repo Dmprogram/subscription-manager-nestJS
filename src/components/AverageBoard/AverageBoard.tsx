@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 import classes from './AverageBoard.module.css'
 
 import { useAppSelector } from '../../hooks/useReduxHooks'
+import { countAverageExpenses } from '../../utils/countAverageExpenses'
 
 export const AverageBoard = () => {
-  const { averageExpensesRub, averageExpensesUsd, averageExpensesEur } = useAppSelector(
-    (state) => state.subscriptionsList.averageExpenses,
-  )
+  const { subscriptions } = useAppSelector((state) => state.subscriptions)
+  const { averageExpensesRub, averageExpensesUsd, averageExpensesEur } = countAverageExpenses(subscriptions)
   return (
     <header className={classes.header}>
       <h2 className={classes.title}>AVERAGE MONTHLY EXPENSES</h2>

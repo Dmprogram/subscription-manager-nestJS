@@ -10,7 +10,7 @@ import { findSubscription, clearSearchAndSortFields } from '../store/subscriptio
 
 export const SearchSubscription = () => {
   const dispatch = useAppDispatch()
-  const { inputSearch } = useAppSelector((state) => state.subscriptionsList)
+  const { inputSearch } = useAppSelector((state) => state.subscriptions)
 
   useEffect(
     () => () => {

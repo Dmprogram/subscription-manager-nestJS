@@ -27,7 +27,7 @@ export const EditSubscription = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { subscriptionId } = useParams<'subscriptionId'>()
-  const { fetchedSubscriptions, loading } = useAppSelector((state) => state.subscriptionsList)
+  const { subscriptions, loading } = useAppSelector((state) => state.subscriptions)
 
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -114,9 +114,7 @@ export const EditSubscription = () => {
     }
   }, [deleteSubscriptionBoolean])
 
-  const subscription = fetchedSubscriptions.find(
-    (el: TSubscription) => el.id === parseInt(subscriptionId as string, 10),
-  )
+  const subscription = subscriptions.find((el: TSubscription) => el.id === parseInt(subscriptionId as string, 10))
   const handleSubmit = async (values: TSubscriptionEditFormValues) => {
     setLoadingEdit(true)
     setDisabledSubmit(true)

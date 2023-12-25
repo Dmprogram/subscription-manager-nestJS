@@ -23,11 +23,4 @@ export type TSubscriptionCreateFormValues = Omit<TSubscriptionCreateValues, 'pri
 export type TSubscriptionEditFormValues = Omit<TSubscription, 'price'> & {
   price: string | number
 }
-// export type TNewSubscriptionValues = Omit<TSubscription, 'id' | 'price' | 'year' | 'month' | 'day'> & {
-//   price: string
-//   date: null | {
-//     day: number
-//     month: number
-//     year: number
-//   }
-// }
+\

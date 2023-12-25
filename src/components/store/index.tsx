@@ -5,7 +5,7 @@ import { userSlice } from './user/userSlice'
 
 export const store = configureStore({
   reducer: {
-    subscriptionsList: subscriptionsSlice.reducer,
+    subscriptions: subscriptionsSlice.reducer,
     user: userSlice.reducer,
   },
 })

@@ -11,7 +11,7 @@ import { addSortByParameter } from '../store/subscriptions/subscriptionsSlice'
 
 export const SelectSortType = () => {
   const windowWidth = useRef(window.innerWidth)
-  const { sortByParameter } = useAppSelector((state) => state.subscriptionsList)
+  const { sortByParameter } = useAppSelector((state) => state.subscriptions)
   const minWidth = windowWidth.current < 568 ? 120 : 160
   const dispatch = useAppDispatch()
   const action: SelectStaticProps['action'] = React.useRef(null)
