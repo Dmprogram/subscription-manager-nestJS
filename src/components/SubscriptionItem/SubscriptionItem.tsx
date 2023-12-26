@@ -72,9 +72,9 @@ export const SubscriptionItem = (props: TSubscription) => {
             Edit & Details
           </Link>
         </div>
-        {/* <div className={classes.switch}>
+        <div className={classes.switch}>
           <SwitchSubscriptionStatus id={id} status={status} />
-        </div> */}
+        </div>
       </div>
     </div>
   )

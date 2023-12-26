@@ -50,4 +50,12 @@ export const SubscriptionService = {
       data,
     })
   },
+
+  async changeStatus(id: string, data: Pick<TSubscription, 'status'>) {
+    return instance<TSubscription>({
+      url: `${SUBSCRIPTIONS}/change-status/${id}`,
+      method: 'PATCH',
+      data,
+    })
+  },
 }

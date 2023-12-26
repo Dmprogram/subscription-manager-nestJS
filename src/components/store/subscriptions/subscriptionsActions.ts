@@ -71,3 +71,20 @@ export const deleteSubscription = createAsyncThunk<TSubscription, string>(
     }
   },
 )
+
+export const changeSubscriptionStatus = createAsyncThunk<TSubscription, { id: string; status: boolean }>(
+  'subscriptions/changeSubscriptionStatus',
+  async ({ id, status }, { rejectWithValue }) => {
+    try {
+      const response = await SubscriptionService.changeStatus(id, { status })
+      return response.data
+    } catch (error: any) {
+      const err: AxiosError<TErrorData> = error
+      if (!err.response) {
+        throw error
+      }
+
+      return rejectWithValue(err.response.data)
+    }
+  },
+)

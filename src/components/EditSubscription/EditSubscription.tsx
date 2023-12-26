@@ -99,9 +99,12 @@ export const EditSubscription = () => {
   const handleDeleteSubscription = async () => {
     setDisabledSubmit(true)
     try {
-      dispatch(deleteSubscription(subscriptionId as string))
+      const response = await dispatch(deleteSubscription(subscriptionId as string))
       setSubscriptionDelete(true)
-      navigate('/active-subscriptions')
+
+      if (response.meta.requestStatus === 'fulfilled') {
+        navigate('/active-subscriptions', { replace: true })
+      }
     } catch (e) {
       setError('Subscription delete failed')
       console.error('Error delete subscription: ', e)
@@ -134,11 +137,13 @@ export const EditSubscription = () => {
         status,
       }
       try {
-        dispatch(editSubscription(editedSubscription))
+        const response = await dispatch(editSubscription(editedSubscription))
 
         setLoadingEdit(false)
         setSubscriptionEdit(true)
-        navigate('/active-subscriptions')
+        if (response.meta.requestStatus === 'fulfilled') {
+          navigate('/active-subscriptions')
+        }
       } catch (e) {
         setError('Edit subscription failed, we fix it')
         console.error('Error edit subscription: ', e)

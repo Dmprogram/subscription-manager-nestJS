@@ -23,4 +23,3 @@ export type TSubscriptionCreateFormValues = Omit<TSubscriptionCreateValues, 'pri
 export type TSubscriptionEditFormValues = Omit<TSubscription, 'price'> & {
   price: string | number
 }
-\

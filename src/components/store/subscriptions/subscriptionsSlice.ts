@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { createSubscription, editSubscription, deleteSubscription, fetchSubscriptions } from './subscriptionsActions'
+import {
+  createSubscription,
+  editSubscription,
+  deleteSubscription,
+  fetchSubscriptions,
+  changeSubscriptionStatus,
+} from './subscriptionsActions'
 import { TSubscriptionsState } from './types'
 
 import { sortByParameter } from '../../../utils/sortByParameter'
@@ -23,20 +29,6 @@ export const subscriptionsSlice = createSlice({
 
     findSubscription(state, action: PayloadAction<{ inputSearch: string }>) {
       state.inputSearch = action.payload.inputSearch
-    },
-
-    changeStatus(state, action: PayloadAction<{ status: boolean; id: number }>) {
-      const subscription = state.fetchedSubscriptions.find((el) => el.id === action.payload.id)
-      if (subscription !== undefined) {
-        subscription.status = action.payload.status
-        state.activeSubscriptions = state.fetchedSubscriptions.filter((el) => el.status)
-        state.inactiveSubscriptions = state.fetchedSubscriptions.filter((el) => !el.status)
-        state.searchSubsciptions.forEach((el, index) => {
-          if (el.id === subscription.id) {
-            state.searchSubsciptions[index] = subscription
-          }
-        })
-      }
     },
 
     clearSearchAndSortFields(state) {
@@ -100,10 +92,24 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'succeeded'
         const deleteSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
         state.subscriptions.splice(deleteSubscriptionIndex, 1)
+
         // state.isSubCreateSnackBar = true
         // state.subNameForSnackBar = action.payload.name
       })
       .addCase(deleteSubscription.rejected, (state, action) => {
+        state.loading = 'failed'
+        state.error = action.payload
+      })
+      .addCase(changeSubscriptionStatus.pending, (state) => {
+        state.loading = 'pending-changeStatus'
+      })
+      .addCase(changeSubscriptionStatus.fulfilled, (state, action) => {
+        state.loading = 'succeeded'
+        const changeStatusSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
+        state.subscriptions[changeStatusSubscriptionIndex] = action.payload
+        // changeStatus(action.payload)
+      })
+      .addCase(changeSubscriptionStatus.rejected, (state, action) => {
         state.loading = 'failed'
         state.error = action.payload
       })
@@ -114,7 +120,6 @@ export const {
   findSubscription,
   clearSearchAndSortFields,
   addSortByParameter,
-  changeStatus,
 
   resetState,
 } = subscriptionsSlice.actions
