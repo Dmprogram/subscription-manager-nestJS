@@ -4,6 +4,8 @@ import { Outlet } from 'react-router-dom'
 
 import { useAppDispatch } from '../../hooks/useReduxHooks'
 import { NavigationBar } from '../NavigationBar/NavigationBar'
+import { NotificationDelete } from '../Notifications/NotificationDelete'
+import { NotificationEdit } from '../Notifications/NotificationEdit'
 import { fetchSubscriptions } from '../store/subscriptions/subscriptionsActions'
 
 export const AppForAuthorized = () => {
@@ -15,6 +17,8 @@ export const AppForAuthorized = () => {
     <>
       <NavigationBar />
       <Outlet />
+      <NotificationDelete />
+      <NotificationEdit />
     </>
   )
 }

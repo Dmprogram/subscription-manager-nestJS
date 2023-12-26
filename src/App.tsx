@@ -26,6 +26,7 @@ const App = () => (
             <Route path='/inactive-subscriptions' element={<InactiveSubscriptionsPage />} />
             <Route path='/new-subscription' element={<NewSubscriptionPage />} />
             <Route path='/edit-subscription/:subscriptionId' element={<EditSubscriptionPage />} />
+
             <Route path='*' element={<NotFoundPage />} />
           </Route>
         </Routes>

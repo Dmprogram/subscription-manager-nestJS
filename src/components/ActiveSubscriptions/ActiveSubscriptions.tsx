@@ -65,6 +65,7 @@ export const ActiveSubscriptions = () => {
           </div>
         ) : null}
       </div>
+
       <div ref={parent}>
         {activeSubscriptions.map((subscription: TSubscription) => (
           <SubscriptionItem key={subscription.id} {...subscription} />

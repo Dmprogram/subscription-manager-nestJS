@@ -18,9 +18,7 @@ import {
 import { validTypes } from '../../utils/validTypesImages'
 import { AlertDeleteSubscription } from '../AlertDeleteSubscription/AlertDeleteSubscription'
 import { DatePick } from '../DatePicker/DatePicker'
-import { NotificationDelete } from '../Notifications/NotificationDelete'
-import { NotificationEdit } from '../Notifications/NotificationEdit'
-import { Spinner } from '../Spinner/Spinner'
+
 import { deleteSubscription, editSubscription } from '../store/subscriptions/subscriptionsActions'
 
 export const EditSubscription = () => {
@@ -28,17 +26,16 @@ export const EditSubscription = () => {
   const navigate = useNavigate()
   const { subscriptionId } = useParams<'subscriptionId'>()
   const { subscriptions, loading } = useAppSelector((state) => state.subscriptions)
-
   const [disabledSubmit, setDisabledSubmit] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const [progress, setProgress] = useState('Choose new image')
   const [newImage, setNewImage] = useState<null | string>(null)
   const [preview, setPreview] = useState('')
-  const [subscriptionDelete, setSubscriptionDelete] = useState(false)
-  const [subscriptionEdit, setSubscriptionEdit] = useState(false)
+
   const [deleteSubscriptionBoolean, setDeleteSubscription] = useState(false)
   const [openAlert, setOpenAlert] = useState(false)
   const [loadingEdit, setLoadingEdit] = useState(false)
+  const [loadingDelete, setLoadingDelete] = useState(false)
   const [error, setError] = useState<string | boolean>(false)
 
   useEffect(() => {
@@ -98,12 +95,13 @@ export const EditSubscription = () => {
 
   const handleDeleteSubscription = async () => {
     setDisabledSubmit(true)
+    setLoadingDelete(true)
     try {
       const response = await dispatch(deleteSubscription(subscriptionId as string))
-      setSubscriptionDelete(true)
 
       if (response.meta.requestStatus === 'fulfilled') {
-        navigate('/active-subscriptions', { replace: true })
+        setLoadingDelete(false)
+        navigate(-1)
       }
     } catch (e) {
       setError('Subscription delete failed')
@@ -117,12 +115,11 @@ export const EditSubscription = () => {
     }
   }, [deleteSubscriptionBoolean])
 
-  const subscription = subscriptions.find((el: TSubscription) => el.id === parseInt(subscriptionId as string, 10))
   const handleSubmit = async (values: TSubscriptionEditFormValues) => {
     setLoadingEdit(true)
     setDisabledSubmit(true)
 
-    if (values.year && values.month && values.day && subscription) {
+    if (values.year && values.month && values.day) {
       const { name, price, currency, paymentFrequency, year, month, day, id, status, image } = values
       const editedSubscription = {
         id,
@@ -138,11 +135,9 @@ export const EditSubscription = () => {
       }
       try {
         const response = await dispatch(editSubscription(editedSubscription))
-
         setLoadingEdit(false)
-        setSubscriptionEdit(true)
         if (response.meta.requestStatus === 'fulfilled') {
-          navigate('/active-subscriptions')
+          navigate(-1)
         }
       } catch (e) {
         setError('Edit subscription failed, we fix it')
@@ -150,13 +145,12 @@ export const EditSubscription = () => {
       }
     }
   }
-
+  const subscription = subscriptions.find((el: TSubscription) => el.id === parseInt(subscriptionId as string, 10))
   const windowWidth = useRef(window.innerWidth)
   const uploadText = windowWidth.current < 568 ? 'Upload' : 'Click to Upload'
   const renderError = (message: string) => <p className={classes.error}>{message}</p>
   const disabledInput = disabledSubmit ? classes.inActiveUpload : classes.activeUpload
-  if (loading === 'pending') return <Spinner />
-  if (loading === 'succeeded' && subscription !== undefined) {
+  if (subscription !== undefined) {
     return (
       <Formik
         initialValues={subscription}
@@ -245,7 +239,6 @@ export const EditSubscription = () => {
               <button name='button' type='submit' className={classes.buttonSubmit} disabled={disabledSubmit}>
                 {(loadingEdit && (
                   <div className={classes.loaderContainer}>
-                    Loading...
                     <div className={classes.loader} />
                   </div>
                 )) ||
@@ -257,19 +250,22 @@ export const EditSubscription = () => {
                 onClick={handleClickDelete}
                 disabled={disabledSubmit}
               >
-                <img src={cancel} alt='cancel' className={classes.cancel} />
-                Cancel Subscription
+                {(loadingDelete && (
+                  <div className={classes.loaderContainer}>
+                    <div className={classes.loader} />
+                  </div>
+                )) || (
+                  <>
+                    <img src={cancel} alt='cancel' className={classes.cancel} />
+                    Delete subscription
+                  </>
+                )}
               </button>
               <AlertDeleteSubscription
                 openAlert={openAlert}
                 setOpenAlert={setOpenAlert}
                 setDeleteSubscription={setDeleteSubscription}
               />
-              <NotificationDelete
-                subscriptionDelete={subscriptionDelete}
-                setSubscriptionDelete={setSubscriptionDelete}
-              />
-              <NotificationEdit subscriptionEdit={subscriptionEdit} setSubscriptionEdit={setSubscriptionEdit} />
             </Form>
           </section>
         )}

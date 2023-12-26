@@ -19,6 +19,9 @@ const initialState = {
   subscriptions: [],
   inputSearch: '',
   sortByParameter: null,
+  subNameForSnackBar: null,
+  isOpenEditSnackBar: false,
+  isOpenDeleteSnackBar: false,
 } as TSubscriptionsState
 
 export const subscriptionsSlice = createSlice({
@@ -37,8 +40,13 @@ export const subscriptionsSlice = createSlice({
 
     addSortByParameter(state, action: PayloadAction<{ sortByParameter: string | null }>) {
       state.sortByParameter = action.payload.sortByParameter
-
       state.subscriptions = sortByParameter(state.subscriptions, state.sortByParameter)
+    },
+    changeIsOpenEditSnackBar(state, action: PayloadAction<{ isOpenEditSnackBar: boolean }>) {
+      state.isOpenEditSnackBar = action.payload.isOpenEditSnackBar
+    },
+    changeIsOpenDeleteSnackBar(state, action: PayloadAction<{ isOpenDeleteSnackBar: boolean }>) {
+      state.isOpenDeleteSnackBar = action.payload.isOpenDeleteSnackBar
     },
   },
   extraReducers: (builder) => {
@@ -63,9 +71,6 @@ export const subscriptionsSlice = createSlice({
       .addCase(createSubscription.fulfilled, (state, action) => {
         state.subscriptions.push(action.payload)
         state.loading = 'succeeded'
-
-        // state.isSubCreateSnackBar = true
-        // state.subNameForSnackBar = action.payload.name
       })
       .addCase(createSubscription.rejected, (state, action) => {
         state.loading = 'failed'
@@ -78,8 +83,9 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'succeeded'
         const editSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
         state.subscriptions[editSubscriptionIndex] = action.payload
-        // state.isSubCreateSnackBar = true
-        // state.subNameForSnackBar = action.payload.name
+        state.isOpenEditSnackBar = true
+        state.isOpenDeleteSnackBar = false
+        state.subNameForSnackBar = action.payload.name
       })
       .addCase(editSubscription.rejected, (state, action) => {
         state.loading = 'failed'
@@ -92,9 +98,9 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'succeeded'
         const deleteSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
         state.subscriptions.splice(deleteSubscriptionIndex, 1)
-
-        // state.isSubCreateSnackBar = true
-        // state.subNameForSnackBar = action.payload.name
+        state.isOpenDeleteSnackBar = true
+        state.isOpenEditSnackBar = false
+        state.subNameForSnackBar = action.payload.name
       })
       .addCase(deleteSubscription.rejected, (state, action) => {
         state.loading = 'failed'
@@ -104,7 +110,6 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'succeeded'
         const changeStatusSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
         state.subscriptions[changeStatusSubscriptionIndex] = action.payload
-        // changeStatus(action.payload)
       })
       .addCase(changeSubscriptionStatus.rejected, (state, action) => {
         state.loading = 'failed'
@@ -119,4 +124,6 @@ export const {
   addSortByParameter,
 
   resetState,
+  changeIsOpenDeleteSnackBar,
+  changeIsOpenEditSnackBar,
 } = subscriptionsSlice.actions

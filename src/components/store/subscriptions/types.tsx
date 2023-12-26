@@ -5,6 +5,8 @@ export type TSubscriptionsState = {
   error: any
   inputSearch: string
   sortByParameter: null | string
-
+  isOpenEditSnackBar: boolean
+  isOpenDeleteSnackBar: boolean
+  subNameForSnackBar: null | string
   subscriptions: TSubscription[]
 }

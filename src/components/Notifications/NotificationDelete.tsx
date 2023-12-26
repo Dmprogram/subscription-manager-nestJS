@@ -3,31 +3,28 @@ import Snackbar from '@mui/material/Snackbar'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
+import { changeIsOpenDeleteSnackBar } from '../store/subscriptions/subscriptionsSlice'
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
   <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />
 ))
 
-interface NotificationDeleteProps {
-  subscriptionDelete: boolean
-  setSubscriptionDelete: (value: boolean) => void
-}
-
-export const NotificationDelete: React.FC<NotificationDeleteProps> = ({
-  subscriptionDelete,
-  setSubscriptionDelete,
-}) => {
+export const NotificationDelete = () => {
+  const { isOpenDeleteSnackBar, subNameForSnackBar } = useAppSelector((state) => state.subscriptions)
+  const dispatch = useAppDispatch()
   const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return
     }
 
-    setSubscriptionDelete(false)
+    dispatch(changeIsOpenDeleteSnackBar({ isOpenDeleteSnackBar: false }))
   }
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Snackbar open={subscriptionDelete} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={isOpenDeleteSnackBar} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity='error' sx={{ width: '100%' }}>
-          Subscription has been deleted!
+          Subscription {subNameForSnackBar} has been deleted!
         </Alert>
       </Snackbar>
     </Stack>
