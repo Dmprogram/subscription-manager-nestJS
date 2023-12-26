@@ -8,7 +8,8 @@ import { countAverageExpenses } from '../../utils/countAverageExpenses'
 
 export const AverageBoard = () => {
   const { subscriptions } = useAppSelector((state) => state.subscriptions)
-  const { averageExpensesRub, averageExpensesUsd, averageExpensesEur } = countAverageExpenses(subscriptions)
+  const activeSubscriptions = subscriptions.filter((el) => el.status)
+  const { averageExpensesRub, averageExpensesUsd, averageExpensesEur } = countAverageExpenses(activeSubscriptions)
   return (
     <header className={classes.header}>
       <h2 className={classes.title}>AVERAGE MONTHLY EXPENSES</h2>
