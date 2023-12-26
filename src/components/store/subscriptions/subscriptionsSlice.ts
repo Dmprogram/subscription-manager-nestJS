@@ -100,9 +100,6 @@ export const subscriptionsSlice = createSlice({
         state.loading = 'failed'
         state.error = action.payload
       })
-      .addCase(changeSubscriptionStatus.pending, (state) => {
-        state.loading = 'pending-changeStatus'
-      })
       .addCase(changeSubscriptionStatus.fulfilled, (state, action) => {
         state.loading = 'succeeded'
         const changeStatusSubscriptionIndex = state.subscriptions.findIndex((el) => el.id === action.payload.id)
