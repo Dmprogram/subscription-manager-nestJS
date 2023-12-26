@@ -1,16 +1,22 @@
-import { useEffect } from 'react'
+import { createDraftSafeSelector } from '@reduxjs/toolkit'
+import React, { useEffect } from 'react'
 
 import classes from './SearchSubscription.module.css'
 
 import cross from '../../assets/crossLight.png'
 import searchIcon from '../../assets/searchIcon.png'
-import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
+import { RootState, useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 
 import { findSubscription, clearSearchAndSortFields } from '../store/subscriptions/subscriptionsSlice'
 
-export const SearchSubscription = () => {
+const SearchSubscription2 = () => {
   const dispatch = useAppDispatch()
-  const { inputSearch } = useAppSelector((state) => state.subscriptions)
+  const inputSearch = useAppSelector(
+    createDraftSafeSelector(
+      (state: RootState) => state,
+      (state) => state.subscriptions.inputSearch,
+    ),
+  )
 
   useEffect(
     () => () => {
@@ -47,3 +53,5 @@ export const SearchSubscription = () => {
     </div>
   )
 }
+
+export const SearchSubscription = React.memo(SearchSubscription2)
